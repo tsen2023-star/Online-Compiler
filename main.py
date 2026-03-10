@@ -13,7 +13,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://tsen2023-star.github.io"],
+    allow_origins=["https://-.github.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -130,5 +130,6 @@ async def run_code_ws(websocket: WebSocket):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
 
 
