@@ -60,7 +60,7 @@ body {
     background: #2d2d30;
     border-color: #1e0855;
     transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgb(255, 0, 0);
+    box-shadow: 0 10px 30px rgb(136, 7, 78);
 }
 
 .language-card .lang-icon {
@@ -364,4 +364,3 @@ body {
         font-size: 12px;
     }
 }
-
