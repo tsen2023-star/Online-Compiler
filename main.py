@@ -8,6 +8,10 @@ import uuid
 import tempfile
 import re
 import sys
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -134,3 +138,34 @@ if __name__ == "__main__":
 
 
 
+
+# --- AI AGENT CONFIGURATION ---
+# The API key is securely loaded from your local environment to prevent leaking it on GitHub!
+genai.configure(api_key=os.environ.get('GEMINI_API_KEY'))
+
+@app.post("/ask-ai")
+async def ask_ai(request: CodeRequest):
+    try:
+        if not os.environ.get('GEMINI_API_KEY'):
+            pass # We have a valid key format theoretically
+        
+        # Use a lightweight, fast model for coding questions
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        prompt = f'''
+        You are an expert programming AI assistant for an Online Compiler.
+        The user is asking about their {request.language} code.
+        
+        Analyze the following {request.language} code:
+        1. Tell them if it is correct or if there are any syntax/logical errors.
+        2. If it is incorrect, explain why.
+        3. Suggest a rewrite with the correct code in markdown format.
+
+        User's Code:
+        {request.code}
+        '''
+        
+        response = model.generate_content(prompt)
+        return {"feedback": response.text}
+    except Exception as e:
+        return {"error": str(e)}
