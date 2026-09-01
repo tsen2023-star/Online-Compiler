@@ -220,16 +220,23 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
     <!-- AI Modal -->
     <div id="ai-modal" style="display: none; position: fixed; bottom: 20px; right: 20px; width: 450px; max-height: 80vh; background: #111725; border: 1px solid #9d00ff; border-radius: 10px; box-shadow: 0 0 20px rgba(157, 0, 255, 0.4); color: white; flex-direction: column; z-index: 1000; overflow: hidden; resize: both;">
         <div id="ai-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #263449; padding: 12px 15px; background: linear-gradient(90deg, #1e2532, #111725); cursor: grab;">
-            <h3 style="margin: 0; color: #00f5ff; font-size: 16px; text-shadow: 0 0 8px rgba(0, 245, 255, 0.6); pointer-events: none;">? AI Code Assistant</h3>
-            <button onclick="document.getElementById('ai-modal').style.display='none'" style="background: transparent; border: none; color: white; font-size: 16px; cursor: pointer;">?</button>
+            <h3 style="margin: 0; color: #00f5ff; font-size: 16px; text-shadow: 0 0 8px rgba(0, 245, 255, 0.6); pointer-events: none;">✨ AI Code Assistant</h3>
+            <button onclick="document.getElementById('ai-modal').style.display='none'" style="background: transparent; border: none; color: white; font-size: 16px; cursor: pointer;">✖</button>
         </div>
-        <div id="ai-response" style="flex: 1; overflow-y: auto; padding: 15px; font-family: \'Segoe UI\', Tahoma, sans-serif; line-height: 1.5; font-size: 14px;">
+        
+        <div id="ai-response" style="flex: 1; overflow-y: auto; padding: 15px; font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.5; font-size: 14px;">
             How can I help you with your code today?
         </div>
-        <div style="padding: 15px; border-top: 1px solid #263449; background: #0b0f19;">
+        
+        <!-- Context Attachment UI -->
+        <div id="ai-attachment-bar" style="background: #151b2b; padding: 6px 15px; font-size: 12px; color: #a8b2c1; border-top: 1px solid #263449; display: none; align-items: center; gap: 8px;">
+            <span style="background: #263449; padding: 3px 8px; border-radius: 4px; color: #00f5ff; font-weight: 500;">📄 <span id="ai-attachment-text"></span></span>
+        </div>
+
+        <div style="padding: 15px; background: #0b0f19;">
             <textarea id="ai-prompt" placeholder="Ask AI to write code, find errors, or explain concepts..." style="width: 100%; height: 60px; background: #1e2532; border: 1px solid #3d4b63; border-radius: 6px; color: white; padding: 10px; box-sizing: border-box; font-family: inherit; resize: none; margin-bottom: 10px;"></textarea>
             <div style="display: flex; justify-content: flex-end;">
-                <button class="run-btn" onclick="sendToAI()" style="padding: 6px 15px; font-size: 13px;">Send ??</button>
+                <button class="run-btn" onclick="sendToAI()" style="padding: 6px 15px; font-size: 13px;">Send 🚀</button>
             </div>
         </div>
     </div>
@@ -272,30 +279,61 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
         // Open the modal when clicking toolbar button
         function askAI() {
             document.getElementById('ai-modal').style.display = 'flex';
+            
+            // Update Context Attachment Bar
+            const editor = document.getElementById('code-editor');
+            const selectedText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+            const attachBar = document.getElementById('ai-attachment-bar');
+            const attachText = document.getElementById('ai-attachment-text');
+            const language = localStorage.getItem('selectedLanguage') || 'python';
+            const ext = {python:'py', cpp:'cpp', java:'java', c:'c', html:'html', css:'css'}[language] || 'txt';
+
+            if (selectedText.trim()) {
+                attachText.innerText = "main." + ext + " (Selected Lines)";
+                attachBar.style.display = 'flex';
+            } else if (editor.value.trim()) {
+                attachText.innerText = "main." + ext + " (Entire File)";
+                attachBar.style.display = 'flex';
+            } else {
+                attachBar.style.display = 'none';
+            }
+
             if (document.getElementById('ai-response').innerText.includes("How can I help you")) {
                 document.getElementById('ai-prompt').focus();
             }
         }
 
         async function sendToAI() {
-            const code = document.getElementById('code-editor').value;
+            const editor = document.getElementById('code-editor');
+            const selectedText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
+            let codeToSend = "";
+            
+            if (selectedText.trim()) {
+                codeToSend = selectedText;
+            } else if (editor.value.trim()) {
+                codeToSend = editor.value;
+            }
+
             const prompt = document.getElementById('ai-prompt').value;
             const language = localStorage.getItem('selectedLanguage') || 'python';
             const responseDiv = document.getElementById('ai-response');
             
-            if (!code.trim() && !prompt.trim()) {
+            if (!codeToSend.trim() && !prompt.trim()) {
                 alert("Please provide some code in the editor or type a question!");
                 return;
             }
 
             responseDiv.innerHTML = '<span style="color: #9d00ff;">Thinking... ⏳</span>';
             document.getElementById('ai-prompt').value = ''; // clear input
+            
+            // Hide attachment bar while thinking/answering
+            document.getElementById('ai-attachment-bar').style.display = 'none';
 
             try {
                 const response = await fetch('https://online-compiler-1-5f6k.onrender.com/ask-ai', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code, language: language, prompt: prompt })
+                    body: JSON.stringify({ code: codeToSend, language: language, prompt: prompt })
                 });
                 
                 const data = await response.json();
@@ -312,8 +350,8 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
                                '<div style="background: #111725; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3d4b63;">' +
                                '<span style="color: #a8b2c1; font-size: 13px; font-weight: bold;">&lt;/&gt; ' + (lang || 'Code') + '</span>' +
                                '<div>' +
-                               '<button onclick="navigator.clipboard.writeText(decodeURIComponent(\'' + encodedCode + '\'))" style="background: transparent; border: 1px solid #a8b2c1; color: white; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; margin-right: 5px; transition: 0.2s;">📋 Copy</button>' +
-                               '<button onclick="document.getElementById(\'code-editor\').value=decodeURIComponent(\'' + encodedCode + '\');" style="background: linear-gradient(90deg, #9d00ff, #2962ff); border: none; color: white; border-radius: 4px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: bold;">▶ Insert</button>' +
+                               '<button class="ai-copy-btn" onclick="navigator.clipboard.writeText(decodeURIComponent(\'' + encodedCode + '\'))">📋 Copy</button>' +
+                               '<button class="ai-insert-btn" onclick="document.getElementById(\'code-editor\').value=decodeURIComponent(\'' + encodedCode + '\');">▶ Insert</button>' +
                                '</div></div>' +
                                '<pre style="margin: 0; padding: 15px; color: #00f5ff; font-family: \'Consolas\', monospace; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;"><code>' + safeCode + '</code></pre></div>';
                     });

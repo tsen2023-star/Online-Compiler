@@ -737,3 +737,34 @@ body {
         white-space: nowrap;
     }
 }
+
+.ai-copy-btn {
+    background: transparent; 
+    border: 1px solid #a8b2c1; 
+    color: white; 
+    border-radius: 4px; 
+    padding: 4px 10px; 
+    cursor: pointer; 
+    font-size: 12px; 
+    margin-right: 5px; 
+    transition: all 0.2s ease-in-out;
+}
+.ai-copy-btn:hover {
+    background: rgba(168, 178, 193, 0.2);
+    box-shadow: 0 0 8px rgba(168, 178, 193, 0.4);
+}
+.ai-insert-btn {
+    background: linear-gradient(90deg, #9d00ff, #2962ff); 
+    border: none; 
+    color: white; 
+    border-radius: 4px; 
+    padding: 5px 12px; 
+    cursor: pointer; 
+    font-size: 12px; 
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+.ai-insert-btn:hover {
+    box-shadow: 0 0 12px rgba(157, 0, 255, 0.7);
+    transform: scale(1.05);
+}
