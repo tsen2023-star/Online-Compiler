@@ -1,3 +1,6 @@
+/* =========================================
+   CYBER NEON — CODECOMPILER THEME
+   ========================================= */
 
 * {
     margin: 0;
@@ -449,7 +452,7 @@ body {
    RUN BUTTON
    ========================================= */
 
-.run-btn {
+.run-btn, #download-btn {
     background:
         linear-gradient(
             135deg,
@@ -479,7 +482,7 @@ body {
         box-shadow 0.2s ease;
 }
 
-.run-btn:hover {
+.run-btn:hover, #download-btn:hover {
     transform: translateY(-2px);
 
     box-shadow:
@@ -487,7 +490,7 @@ body {
         0 0 30px rgba(0, 245, 255, 0.35);
 }
 
-.run-btn:active {
+.run-btn:active, #download-btn:active {
     transform: translateY(0);
 }
 
@@ -800,4 +803,3 @@ body {
         white-space: nowrap;
     }
 }
-
