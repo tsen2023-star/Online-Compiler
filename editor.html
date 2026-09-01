@@ -98,8 +98,9 @@
 <body>
     <div class="header">
         <div class="logo"><span>&lt;/&gt;</span> Code Compiler</div>
-        <div class="header-actions">
-            <button id="home-btn" onclick="window.location.href='index.html'">← Home</button>
+        <div class="header-actions" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+            <button id="home-btn" onclick="window.location.href='index.html'">Home</button>
+            <button id="theme-btn" onclick="toggleTheme()" style="background: transparent; border: 1px solid var(--cyan); color: var(--cyan); border-radius: 4px; cursor: pointer; padding: 4px 10px; font-size: 12px; font-weight: bold; width: 100%;">☀️ Light</button>
         </div>
     </div>
 
