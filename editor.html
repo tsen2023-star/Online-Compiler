@@ -90,8 +90,9 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
-        .CodeMirror { height: 100%; font-family: 'Consolas', monospace; font-size: 14px; border-radius: 8px; background-color: #0b0f19 !important; }
-      .CodeMirror-gutters { background-color: #0b0f19 !important; border-right: 1px solid #1e2532 !important; }
+        .CodeMirror { height: 100%; font-family: 'Consolas', monospace; font-size: 14px; border-radius: 8px; }
+      .cm-s-monokai.CodeMirror { background-color: #0b0f19 !important; }
+      .cm-s-monokai .CodeMirror-gutters { background-color: #0b0f19 !important; border-right: 1px solid #1e2532 !important; }
     </style>
 </head>
 <body>
@@ -163,6 +164,34 @@
         </div>
     </div>
 <script>
+        
+        // --- Theme Logic ---
+        function toggleTheme() {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeUI(isLight);
+        }
+
+        function updateThemeUI(isLight) {
+            const themeBtn = document.getElementById('theme-btn');
+            themeBtn.innerHTML = isLight ? '🌙 Dark' : '☀️ Light';
+            
+            // Update CodeMirror
+            editor.setOption('theme', isLight ? 'default' : 'monokai');
+            
+            // Update Terminal
+            term.options.theme = isLight 
+                ? { background: '#ffffff', foreground: '#1e293b', cursor: '#1e293b' } 
+                : { background: '#000000', foreground: '#ffffff', cursor: '#ffffff' };
+        }
+
+        // Initialize Theme on Load
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
+            // We call updateThemeUI(true) slightly later because term/editor might not be fully ready here
+            setTimeout(() => updateThemeUI(true), 50);
+        }
+        
         // --- CodeMirror Initialization ---
         const editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
             lineNumbers: true,

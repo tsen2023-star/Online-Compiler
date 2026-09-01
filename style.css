@@ -768,3 +768,42 @@ body {
     box-shadow: 0 0 12px rgba(157, 0, 255, 0.7);
     transform: scale(1.05);
 }
+
+
+/* Light Mode Overrides */
+body.light-mode {
+    --bg: #f0f4f8;
+    --bg2: #ffffff;
+    --panel: #f9fafb;
+    --card: #ffffff;
+    --card-hover: #e2e8f0;
+
+    --border: #cbd5e1;
+    --cyan: #0284c7;
+    --cyan-dark: #0369a1;
+
+    --purple: #7c3aed;
+    --purple-light: #8b5cf6;
+
+    --text: #1e293b;
+    --text-secondary: #475569;
+    --muted: #64748b;
+}
+
+body.light-mode #ai-modal,
+body.light-mode #ai-header,
+body.light-mode #ai-attachment-container,
+body.light-mode .output-header {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+}
+
+body.light-mode #ai-prompt {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light-mode #terminal-container {
+    background: #ffffff !important;
+}
