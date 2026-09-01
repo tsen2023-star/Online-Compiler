@@ -1,56 +1,807 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Compiler - Home</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="landing-container">
-        <div class="landing-header">
-            <div class="logo"><span>&lt;/&gt;</span> CodeCompiler</div>
-            <p class="tagline">Write and Run Python, C++, Java, C, HTML, and CSS</p>
-        </div>
+```css
+/* =========================================
+   CYBER NEON — CODECOMPILER THEME
+   ========================================= */
 
-        <div class="language-grid">
-            <div class="language-card" onclick="selectLanguage('python')">
-                <div class="lang-icon">🐍</div>
-                <h3>Python</h3>
-                <p>Simple and readable</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('cpp')">
-                <div class="lang-icon">⚙️</div>
-                <h3>C++</h3>
-                <p>Speed and performance</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('java')">
-                <div class="lang-icon">☕</div>
-                <h3>Java</h3>
-                <p>Enterprise OOP</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('c')">
-                <div class="lang-icon">⚡</div>
-                <h3>C</h3>
-                <p>Low-level power</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('html')">
-                <div class="lang-icon">🌐</div>
-                <h3>HTML</h3>
-                <p>Web structure</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('css')">
-                <div class="lang-icon">🎨</div>
-                <h3>CSS</h3>
-                <p>Web styling</p>
-            </div>
-        </div>
-    </div>
-    <script>
-        function selectLanguage(lang) {
-            localStorage.setItem('selectedLanguage', lang);
-            window.location.href = 'editor.html';
-        }
-    </script>
-</body>
-</html>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #080b12;
+    --bg2: #0d111b;
+    --panel: #111725;
+    --card: #151d2d;
+    --card-hover: #1b263a;
+
+    --border: #263449;
+    --cyan: #00f5ff;
+    --cyan-dark: #00a8b5;
+
+    --purple: #9d00ff;
+    --purple-light: #c45cff;
+
+    --text: #f1f7ff;
+    --text-secondary: #9baac0;
+    --muted: #68768a;
+
+    --green: #00ff9d;
+    --red: #ff3864;
+}
+
+
+/* =========================================
+   BODY
+   ========================================= */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   LANDING PAGE
+   ========================================= */
+
+.landing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.landing-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+
+/* Logo */
+
+.landing-header .logo {
+    font-size: 48px;
+    font-weight: bold;
+    color: var(--cyan);
+
+    margin-bottom: 15px;
+
+    text-shadow:
+        0 0 8px rgba(0, 245, 255, 0.7),
+        0 0 25px rgba(0, 245, 255, 0.3);
+}
+
+.landing-header .logo span {
+    color: var(--purple-light);
+
+    text-shadow:
+        0 0 8px rgba(157, 0, 255, 0.8),
+        0 0 20px rgba(157, 0, 255, 0.4);
+}
+
+.landing-header .tagline {
+    font-size: 20px;
+    color: var(--text-secondary);
+}
+
+
+/* =========================================
+   LANGUAGE GRID
+   ========================================= */
+
+.language-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+
+/* =========================================
+   LANGUAGE CARDS
+   ========================================= */
+
+.language-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #151d2d,
+            #0f1521
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 30px;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+
+/* Neon top line */
+
+.language-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            var(--purple)
+        );
+
+    box-shadow:
+        0 0 10px var(--cyan);
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+
+/* Neon corner glow */
+
+.language-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -50px;
+    bottom: -50px;
+
+    background: var(--purple);
+
+    border-radius: 50%;
+
+    filter: blur(60px);
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+
+/* Hover */
+
+.language-card:hover {
+    transform: translateY(-8px);
+
+    background: var(--card-hover);
+
+    border-color: var(--cyan);
+
+    box-shadow:
+        0 0 10px rgba(0, 245, 255, 0.15),
+        0 0 30px rgba(0, 245, 255, 0.08),
+        inset 0 0 20px rgba(0, 245, 255, 0.03);
+}
+
+.language-card:hover::before,
+.language-card:hover::after {
+    opacity: 1;
+}
+
+
+/* Icons */
+
+.language-card .lang-icon {
+    font-size: 48px;
+
+    margin-bottom: 15px;
+
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+.language-card:hover .lang-icon {
+    transform: scale(1.1);
+
+    filter:
+        drop-shadow(0 0 8px rgba(0, 245, 255, 0.5));
+}
+
+
+/* Card title */
+
+.language-card h3 {
+    font-size: 24px;
+
+    color: var(--text);
+
+    margin-bottom: 10px;
+}
+
+
+/* Card description */
+
+.language-card p {
+    font-size: 14px;
+
+    color: var(--text-secondary);
+}
+
+
+/* =========================================
+   FEATURES
+   ========================================= */
+
+.features {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 30px;
+
+    margin-top: 60px;
+}
+
+.feature {
+    text-align: center;
+
+    padding: 30px;
+}
+
+.feature-icon {
+    font-size: 40px;
+
+    display: block;
+
+    margin-bottom: 15px;
+}
+
+.feature h4 {
+    font-size: 20px;
+
+    color: var(--text);
+
+    margin-bottom: 10px;
+}
+
+.feature p {
+    font-size: 14px;
+
+    color: var(--text-secondary);
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.header {
+    background: var(--bg2);
+
+    padding: 10px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 1px solid var(--border);
+
+    height: 50px;
+}
+
+.logo {
+    font-size: 20px;
+
+    font-weight: bold;
+
+    color: var(--cyan);
+
+    text-shadow:
+        0 0 8px rgba(0, 245, 255, 0.6);
+}
+
+.logo span {
+    color: var(--purple-light);
+
+    text-shadow:
+        0 0 8px rgba(157, 0, 255, 0.6);
+}
+
+
+/* =========================================
+   LANGUAGE TABS
+   ========================================= */
+
+.language-tabs {
+    display: flex;
+
+    background: var(--bg2);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.lang-tab {
+    padding: 12px 24px;
+
+    cursor: pointer;
+
+    background: var(--bg2);
+
+    color: var(--muted);
+
+    border: none;
+
+    border-right: 1px solid var(--border);
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.lang-tab:hover {
+    background: var(--panel);
+
+    color: var(--cyan);
+}
+
+.lang-tab.active {
+    background: var(--bg);
+
+    color: var(--cyan);
+
+    border-bottom: 2px solid var(--cyan);
+
+    box-shadow:
+        0 3px 12px rgba(0, 245, 255, 0.15);
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+   ========================================= */
+
+.main-container {
+    display: flex;
+
+    height: calc(100vh - 92px);
+}
+
+
+/* =========================================
+   EDITOR SECTION
+   ========================================= */
+
+.editor-section {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    border-right: 1px solid var(--border);
+}
+
+
+/* =========================================
+   TOOLBAR
+   ========================================= */
+
+.toolbar {
+    background: var(--bg2);
+
+    padding: 10px 15px;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.toolbar button {
+    padding: 8px 16px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+/* =========================================
+   RUN BUTTON
+   ========================================= */
+
+.run-btn {
+    background:
+        linear-gradient(
+            135deg,
+            #00a8b5,
+            #00f5ff
+        );
+
+    color: #001014;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    padding: 8px 20px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 10px rgba(0, 245, 255, 0.3);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.run-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 12px rgba(0, 245, 255, 0.8),
+        0 0 30px rgba(0, 245, 255, 0.35);
+}
+
+.run-btn:active {
+    transform: translateY(0);
+}
+
+
+/* Other buttons */
+
+.toolbar .btn {
+    background: var(--panel);
+
+    color: var(--text-secondary);
+
+    border: 1px solid var(--border);
+}
+
+.toolbar .btn:hover {
+    background: var(--card);
+
+    color: var(--cyan);
+
+    border-color: var(--cyan);
+
+    box-shadow:
+        0 0 8px rgba(0, 245, 255, 0.15);
+}
+
+
+/* =========================================
+   CODE EDITOR
+   ========================================= */
+
+#code-editor {
+    flex: 1;
+
+    width: 100%;
+
+    background: #06090f;
+
+    color: #dcecff;
+
+    border: none;
+
+    padding: 15px;
+
+    font-family:
+        'Consolas',
+        'Courier New',
+        monospace;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+
+    resize: none;
+
+    outline: none;
+
+    tab-size: 4;
+
+    cursor: text;
+
+    caret-color: var(--cyan);
+}
+
+#code-editor::placeholder {
+    color: #4c5b70;
+
+    font-style: italic;
+}
+
+
+/* =========================================
+   OUTPUT SECTION
+   ========================================= */
+
+.output-section {
+    flex: 0.8;
+
+    display: flex;
+
+    flex-direction: column;
+
+    background: var(--bg2);
+}
+
+
+/* Output Header */
+
+.output-header {
+    background: var(--bg2);
+
+    padding: 8px 15px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.output-title {
+    font-size: 14px;
+
+    font-weight: 500;
+
+    color: var(--cyan);
+
+    text-shadow:
+        0 0 6px rgba(0, 245, 255, 0.4);
+}
+
+
+/* =========================================
+   CONSOLE
+   ========================================= */
+
+.console-output {
+    flex: 1;
+
+    padding: 15px;
+
+    font-family:
+        'Consolas',
+        'Courier New',
+        monospace;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    overflow-y: auto;
+
+    white-space: pre-wrap;
+
+    color: var(--text-secondary);
+
+    background: #06090f;
+}
+
+.console-output .success {
+    color: var(--green);
+
+    text-shadow:
+        0 0 6px rgba(0, 255, 157, 0.35);
+}
+
+.console-output .error {
+    color: var(--red);
+
+    text-shadow:
+        0 0 6px rgba(255, 56, 100, 0.35);
+}
+
+.console-output .info {
+    color: var(--cyan);
+
+    text-shadow:
+        0 0 6px rgba(0, 245, 255, 0.35);
+}
+
+
+/* =========================================
+   INPUT AREA
+   ========================================= */
+
+.input-section {
+    background: var(--bg2);
+
+    padding: 10px 15px;
+
+    border-top: 1px solid var(--border);
+}
+
+.input-label {
+    font-size: 12px;
+
+    color: var(--muted);
+
+    margin-bottom: 5px;
+}
+
+.input-wrapper {
+    display: flex;
+
+    align-items: center;
+
+    background: #0d1420;
+
+    border: 1px solid var(--border);
+
+    border-radius: 5px;
+
+    padding: 8px 12px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--cyan);
+
+    box-shadow:
+        0 0 8px rgba(0, 245, 255, 0.15);
+}
+
+.input-wrapper .prompt {
+    color: var(--cyan);
+
+    margin-right: 8px;
+
+    font-weight: bold;
+
+    text-shadow:
+        0 0 6px rgba(0, 245, 255, 0.6);
+}
+
+.input-wrapper input {
+    flex: 1;
+
+    background: transparent;
+
+    border: none;
+
+    color: var(--text);
+
+    font-size: 14px;
+
+    outline: none;
+
+    font-family:
+        'Consolas',
+        monospace;
+}
+
+
+/* =========================================
+   SCROLLBAR
+   ========================================= */
+
+::-webkit-scrollbar {
+    width: 10px;
+
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #06090f;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #243247;
+
+    border-radius: 5px;
+
+    border: 2px solid #06090f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cyan);
+
+    box-shadow:
+        0 0 8px var(--cyan);
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    .landing-container {
+        padding: 40px 15px;
+    }
+
+    .landing-header .logo {
+        font-size: 38px;
+    }
+
+    .landing-header .tagline {
+        font-size: 16px;
+    }
+
+    .language-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .main-container {
+        flex-direction: column;
+    }
+
+    .editor-section,
+    .output-section {
+        flex: none;
+
+        height: 50%;
+    }
+
+    .language-tabs {
+        overflow-x: auto;
+    }
+
+    .lang-tab {
+        padding: 10px 15px;
+
+        font-size: 12px;
+
+        white-space: nowrap;
+    }
+}
+```
