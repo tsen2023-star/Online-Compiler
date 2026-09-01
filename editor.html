@@ -260,7 +260,28 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
                 if (data.error) {
                     responseDiv.innerHTML = '<span style="color: #ff3864;">Error: ' + data.error + '</span>';
                 } else {
-                    responseDiv.innerHTML = data.feedback;
+                    let formatted = data.feedback;
+                    // Format bold text
+                    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #00f5ff;">$1</strong>');
+                    
+                    // Format code blocks
+                    formatted = formatted.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
+                        const safeCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const encodedCode = encodeURIComponent(code);
+                        return `
+                        <div style="background: #1e2532; border-radius: 8px; margin: 15px 0; border: 1px solid #3d4b63; overflow: hidden;">
+                            <div style="background: #111725; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3d4b63;">
+                                <span style="color: #a8b2c1; font-size: 13px; font-weight: bold;">&lt;/&gt; ${lang || 'Code'}</span>
+                                <div>
+                                    <button onclick="navigator.clipboard.writeText(decodeURIComponent('${encodedCode}'))" style="background: transparent; border: 1px solid #a8b2c1; color: white; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; margin-right: 5px; transition: 0.2s;">📋 Copy</button>
+                                    <button onclick="document.getElementById('code-editor').value=decodeURIComponent('${encodedCode}'); document.getElementById('ai-modal').style.display='none';" style="background: linear-gradient(90deg, #9d00ff, #2962ff); border: none; color: white; border-radius: 4px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: bold;">▶ Insert</button>
+                                </div>
+                            </div>
+                            <pre style="margin: 0; padding: 15px; color: #00f5ff; font-family: 'Consolas', monospace; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;"><code>${safeCode}</code></pre>
+                        </div>`;
+                    });
+                    
+                    responseDiv.innerHTML = formatted;
                 }
             } catch (err) {
                 responseDiv.innerHTML = '<span style="color: #ff3864;">Failed to connect to the backend API. Make sure your Python server is running!</span>';
