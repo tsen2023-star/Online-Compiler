@@ -27,6 +27,7 @@ class CodeRequest(BaseModel):
     code: str
     language: str
     input_data: str = ""
+    prompt: str = ""
 
 @app.post("/run")
 async def run_code(request: CodeRequest):
@@ -149,21 +150,22 @@ async def ask_ai(request: CodeRequest):
         if not os.environ.get('GEMINI_API_KEY'):
             pass # We have a valid key format theoretically
         
-        # Use a lightweight, fast model for coding questions
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Use the latest available flash model from the API
+        model = genai.GenerativeModel('gemini-3.6-flash')
         
-        prompt = f'''
-        You are an expert programming AI assistant for an Online Compiler.
-        The user is asking about their {request.language} code.
+        prompt = f"You are an expert programming AI assistant for an Online Compiler.\nThe user is working in {request.language}.\n"
         
-        Analyze the following {request.language} code:
-        1. Tell them if it is correct or if there are any syntax/logical errors.
-        2. If it is incorrect, explain why.
-        3. Suggest a rewrite with the correct code in markdown format.
-
-        User's Code:
-        {request.code}
-        '''
+        if request.prompt:
+            prompt += f"\nUser's question/request:\n{request.prompt}\n"
+            
+        if request.code and request.code.strip():
+            prompt += f"\nUser's current code:\n{request.code}\n"
+            
+        if not request.prompt and (request.code and request.code.strip()):
+            prompt += "\nAnalyze the code: Tell them if it is correct. If incorrect, explain why and provide the corrected code in markdown."
+            
+        if not request.prompt and not request.code.strip():
+            return {"feedback": "Please provide either some code in the editor or ask a specific question!"}
         
         response = model.generate_content(prompt)
         return {"feedback": response.text}

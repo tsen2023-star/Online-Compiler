@@ -218,49 +218,109 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
         window.onload = () => switchLanguage(localStorage.getItem('selectedLanguage') || 'python');
     </script>
     <!-- AI Modal -->
-    <div id="ai-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
-        <div style="background: #111725; border: 1px solid #9d00ff; border-radius: 10px; width: 60%; max-width: 800px; padding: 20px; box-shadow: 0 0 20px rgba(157, 0, 255, 0.4); color: white; display: flex; flex-direction: column; max-height: 80%;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #263449; padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0; color: #00f5ff; text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);">✨ AI Code Assistant</h3>
-                <button onclick="document.getElementById('ai-modal').style.display='none'" style="background: transparent; border: none; color: white; font-size: 20px; cursor: pointer;">✖</button>
-            </div>
-            <div id="ai-response" style="flex: 1; overflow-y: auto; font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.6; white-space: pre-wrap;">
-                Click "Ask AI" to analyze your code...
-            </div>
-            <div style="margin-top: 15px; text-align: right;">
-                <button class="run-btn" onclick="document.getElementById('ai-modal').style.display='none'">Close</button>
+    <div id="ai-modal" style="display: none; position: fixed; bottom: 20px; right: 20px; width: 450px; max-height: 80vh; background: #111725; border: 1px solid #9d00ff; border-radius: 10px; box-shadow: 0 0 20px rgba(157, 0, 255, 0.4); color: white; flex-direction: column; z-index: 1000; overflow: hidden; resize: both;">
+        <div id="ai-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #263449; padding: 12px 15px; background: linear-gradient(90deg, #1e2532, #111725); cursor: grab;">
+            <h3 style="margin: 0; color: #00f5ff; font-size: 16px; text-shadow: 0 0 8px rgba(0, 245, 255, 0.6); pointer-events: none;">? AI Code Assistant</h3>
+            <button onclick="document.getElementById('ai-modal').style.display='none'" style="background: transparent; border: none; color: white; font-size: 16px; cursor: pointer;">?</button>
+        </div>
+        <div id="ai-response" style="flex: 1; overflow-y: auto; padding: 15px; font-family: \'Segoe UI\', Tahoma, sans-serif; line-height: 1.5; font-size: 14px;">
+            How can I help you with your code today?
+        </div>
+        <div style="padding: 15px; border-top: 1px solid #263449; background: #0b0f19;">
+            <textarea id="ai-prompt" placeholder="Ask AI to write code, find errors, or explain concepts..." style="width: 100%; height: 60px; background: #1e2532; border: 1px solid #3d4b63; border-radius: 6px; color: white; padding: 10px; box-sizing: border-box; font-family: inherit; resize: none; margin-bottom: 10px;"></textarea>
+            <div style="display: flex; justify-content: flex-end;">
+                <button class="run-btn" onclick="sendToAI()" style="padding: 6px 15px; font-size: 13px;">Send ??</button>
             </div>
         </div>
     </div>
 
     <script>
-        async function askAI() {
+        // Make the AI modal draggable
+        dragElement(document.getElementById("ai-modal"));
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById("ai-header")) {
+                document.getElementById("ai-header").onmousedown = dragMouseDown;
+            } else {
+                elmnt.onmousedown = dragMouseDown;
+            }
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX; pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                elmnt.style.bottom = "auto";
+                elmnt.style.right = "auto";
+            }
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // Open the modal when clicking toolbar button
+        function askAI() {
+            document.getElementById('ai-modal').style.display = 'flex';
+            if (document.getElementById('ai-response').innerText.includes("How can I help you")) {
+                document.getElementById('ai-prompt').focus();
+            }
+        }
+
+        async function sendToAI() {
             const code = document.getElementById('code-editor').value;
+            const prompt = document.getElementById('ai-prompt').value;
             const language = localStorage.getItem('selectedLanguage') || 'python';
-            const modal = document.getElementById('ai-modal');
             const responseDiv = document.getElementById('ai-response');
             
-            if (!code.trim()) {
-                alert("Please write some code first!");
+            if (!code.trim() && !prompt.trim()) {
+                alert("Please provide some code in the editor or type a question!");
                 return;
             }
 
-            modal.style.display = 'flex';
-            responseDiv.innerHTML = '<span style="color: #9d00ff;">Analyzing your code... Thinking...</span>';
+            responseDiv.innerHTML = '<span style="color: #9d00ff;">Thinking... ?</span>';
+            document.getElementById('ai-prompt').value = ''; // clear input
 
             try {
-                // We will connect this to the backend FastAPI endpoint shortly
                 const response = await fetch('http://127.0.0.1:8000/ask-ai', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code, language: language })
+                    body: JSON.stringify({ code: code, language: language, prompt: prompt })
                 });
                 
                 const data = await response.json();
                 if (data.error) {
                     responseDiv.innerHTML = '<span style="color: #ff3864;">Error: ' + data.error + '</span>';
                 } else {
-                    responseDiv.innerHTML = data.feedback;
+                    let formatted = data.feedback;
+                    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #00f5ff;"></strong>');
+                    
+                    formatted = formatted.replace(/`(\w+)?\n([\s\S]*?)`/g, function(match, lang, code) {
+                        const safeCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const encodedCode = encodeURIComponent(code);
+                        return                         <div style="background: #1e2532; border-radius: 8px; margin: 15px 0; border: 1px solid #3d4b63; overflow: hidden;">
+                            <div style="background: #111725; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3d4b63;">
+                                <span style="color: #a8b2c1; font-size: 13px; font-weight: bold;">&lt;/&gt; \</span>
+                                <div>
+                                    <button onclick="navigator.clipboard.writeText(decodeURIComponent(''))" style="background: transparent; border: 1px solid #a8b2c1; color: white; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; margin-right: 5px; transition: 0.2s;">?? Copy</button>
+                                    <button onclick="document.getElementById('code-editor').value=decodeURIComponent('');" style="background: linear-gradient(90deg, #9d00ff, #2962ff); border: none; color: white; border-radius: 4px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: bold;">? Insert</button>
+                                </div>
+                            </div>
+                            <pre style="margin: 0; padding: 15px; color: #00f5ff; font-family: 'Consolas', monospace; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;"><code>\</code></pre>
+                        </div>\;
+                    });
+                    
+                    responseDiv.innerHTML = formatted;
                 }
             } catch (err) {
                 responseDiv.innerHTML = '<span style="color: #ff3864;">Failed to connect to the backend API. Make sure your Python server is running!</span>';
@@ -269,6 +329,3 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
     </script>
 </body>
 </html>
-
-
-
