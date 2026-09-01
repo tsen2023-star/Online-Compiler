@@ -228,9 +228,15 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
             How can I help you with your code today?
         </div>
         
-        <!-- Context Attachment UI -->
-        <div id="ai-attachment-bar" style="background: #151b2b; padding: 6px 15px; font-size: 12px; color: #a8b2c1; border-top: 1px solid #263449; display: none; align-items: center; gap: 8px;">
-            <span style="background: #263449; padding: 3px 8px; border-radius: 4px; color: #00f5ff; font-weight: 500;">📄 <span id="ai-attachment-text"></span></span>
+        <!-- Context Attachment UI (Card Format) -->
+        <div id="ai-attachment-container" style="padding: 10px 15px 0 15px; background: #0b0f19; display: none;">
+            <div id="ai-attached-file" style="position: relative; width: 90px; height: 90px; background: #2a2a2a; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="background: #d93025; color: white; font-weight: bold; border-radius: 4px; padding: 2px 5px; font-size: 11px;">&lt; &gt;</div>
+                    <button onclick="removeAttachment()" style="background: white; color: black; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; padding: 0; line-height: 1;">×</button>
+                </div>
+                <div id="ai-attachment-text" style="color: white; font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Segoe UI', Tahoma, sans-serif;">code.py</div>
+            </div>
         </div>
 
         <div style="padding: 15px; background: #0b0f19;">
@@ -276,6 +282,9 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
             }
         }
 
+        // Global variable to store what code is attached
+        let attachedCodeContext = "";
+
         // Open the modal when clicking toolbar button
         function askAI() {
             document.getElementById('ai-modal').style.display = 'flex';
@@ -283,19 +292,22 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
             // Update Context Attachment Bar
             const editor = document.getElementById('code-editor');
             const selectedText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
-            const attachBar = document.getElementById('ai-attachment-bar');
+            const attachContainer = document.getElementById('ai-attachment-container');
             const attachText = document.getElementById('ai-attachment-text');
             const language = localStorage.getItem('selectedLanguage') || 'python';
             const ext = {python:'py', cpp:'cpp', java:'java', c:'c', html:'html', css:'css'}[language] || 'txt';
 
             if (selectedText.trim()) {
-                attachText.innerText = "main." + ext + " (Selected Lines)";
-                attachBar.style.display = 'flex';
+                attachedCodeContext = selectedText;
+                attachText.innerText = "code." + ext;
+                attachContainer.style.display = 'block';
             } else if (editor.value.trim()) {
-                attachText.innerText = "main." + ext + " (Entire File)";
-                attachBar.style.display = 'flex';
+                attachedCodeContext = editor.value;
+                attachText.innerText = "code." + ext;
+                attachContainer.style.display = 'block';
             } else {
-                attachBar.style.display = 'none';
+                attachedCodeContext = "";
+                attachContainer.style.display = 'none';
             }
 
             if (document.getElementById('ai-response').innerText.includes("How can I help you")) {
@@ -303,22 +315,17 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
             }
         }
 
-        async function sendToAI() {
-            const editor = document.getElementById('code-editor');
-            const selectedText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
-            let codeToSend = "";
-            
-            if (selectedText.trim()) {
-                codeToSend = selectedText;
-            } else if (editor.value.trim()) {
-                codeToSend = editor.value;
-            }
+        function removeAttachment() {
+            attachedCodeContext = "";
+            document.getElementById('ai-attachment-container').style.display = 'none';
+        }
 
+        async function sendToAI() {
             const prompt = document.getElementById('ai-prompt').value;
             const language = localStorage.getItem('selectedLanguage') || 'python';
             const responseDiv = document.getElementById('ai-response');
             
-            if (!codeToSend.trim() && !prompt.trim()) {
+            if (!attachedCodeContext.trim() && !prompt.trim()) {
                 alert("Please provide some code in the editor or type a question!");
                 return;
             }
@@ -326,8 +333,10 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
             responseDiv.innerHTML = '<span style="color: #9d00ff;">Thinking... ⏳</span>';
             document.getElementById('ai-prompt').value = ''; // clear input
             
-            // Hide attachment bar while thinking/answering
-            document.getElementById('ai-attachment-bar').style.display = 'none';
+            // Capture the code to send, then hide the attachment bar
+            const codeToSend = attachedCodeContext;
+            document.getElementById('ai-attachment-container').style.display = 'none';
+            attachedCodeContext = ""; // Reset after sending
 
             try {
                 const response = await fetch('https://online-compiler-1-5f6k.onrender.com/ask-ai', {
@@ -351,7 +360,7 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
                                '<span style="color: #a8b2c1; font-size: 13px; font-weight: bold;">&lt;/&gt; ' + (lang || 'Code') + '</span>' +
                                '<div>' +
                                '<button class="ai-copy-btn" onclick="navigator.clipboard.writeText(decodeURIComponent(\'' + encodedCode + '\'))">📋 Copy</button>' +
-                               '<button class="ai-insert-btn" onclick="document.getElementById(\'code-editor\').value=decodeURIComponent(\'' + encodedCode + '\');">▶ Insert</button>' +
+                               '<button class="ai-insert-btn" onclick="document.getElementById(\'code-editor\').value=decodeURIComponent(\'' + encodedCode + '\'); document.getElementById(\'ai-modal\').style.display=\'none\';">▶ Insert</button>' +
                                '</div></div>' +
                                '<pre style="margin: 0; padding: 15px; color: #00f5ff; font-family: \'Consolas\', monospace; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;"><code>' + safeCode + '</code></pre></div>';
                     });
