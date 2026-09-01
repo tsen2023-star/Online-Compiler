@@ -1,5 +1,6 @@
 import asyncio
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.responses import StreamingResponse, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import subprocess
@@ -110,6 +111,13 @@ async def run_code_ws(websocket: WebSocket):
                 try:
                     while True:
                         user_input = await websocket.receive_text()
+                        if user_input == '{"command": "stop"}':
+                            try:
+                                process.terminate()
+                                await websocket.send_text("\r\n[Process Terminated by User]\r\n")
+                            except:
+                                pass
+                            break
                         if process.stdin:
                             process.stdin.write(user_input.encode())
                             await process.stdin.drain()
@@ -148,26 +156,31 @@ genai.configure(api_key=os.environ.get('GEMINI_API_KEY'))
 async def ask_ai(request: CodeRequest):
     try:
         if not os.environ.get('GEMINI_API_KEY'):
-            pass # We have a valid key format theoretically
+            pass 
         
-        # Use the latest available flash model from the API
         model = genai.GenerativeModel('gemini-3.6-flash')
         
         prompt = f"You are an expert programming AI assistant for an Online Compiler.\nThe user is working in {request.language}.\n"
-        
-        if request.prompt:
-            prompt += f"\nUser's question/request:\n{request.prompt}\n"
-            
-        if request.code and request.code.strip():
-            prompt += f"\nUser's current code:\n{request.code}\n"
-            
+        if request.prompt: prompt += f"\nUser's question/request:\n{request.prompt}\n"
+        if request.code and request.code.strip(): prompt += f"\nUser's current code:\n{request.code}\n"
         if not request.prompt and (request.code and request.code.strip()):
             prompt += "\nAnalyze the code: Tell them if it is correct. If incorrect, explain why and provide the corrected code in markdown."
             
         if not request.prompt and not request.code.strip():
-            return {"feedback": "Please provide either some code in the editor or ask a specific question!"}
+            async def err_gen(): yield "Please provide either some code in the editor or ask a specific question!"
+            return StreamingResponse(err_gen(), media_type="text/plain")
         
-        response = model.generate_content(prompt)
-        return {"feedback": response.text}
+        response = model.generate_content(prompt, stream=True)
+        
+        async def stream_generator():
+            try:
+                for chunk in response:
+                    if chunk.text:
+                        yield chunk.text
+            except Exception as e:
+                yield f"\n\n[Error during streaming: {str(e)}]"
+                
+        return StreamingResponse(stream_generator(), media_type="text/plain")
     except Exception as e:
-        return {"error": str(e)}
+        async def err_gen(): yield f"Error: {str(e)}"
+        return StreamingResponse(err_gen(), media_type="text/plain")
