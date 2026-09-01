@@ -232,7 +232,7 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
         <div id="ai-attachment-container" style="padding: 10px 15px 0 15px; background: #0b0f19; display: none;">
             <div id="ai-attached-file" style="position: relative; width: 90px; height: 90px; background: #2a2a2a; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div style="background: #d93025; color: white; font-weight: bold; border-radius: 4px; padding: 2px 5px; font-size: 11px;">&lt; &gt;</div>
+                    <img id="ai-attachment-icon" src="" style="width: 24px; height: 24px; border-radius: 4px;" alt="Language Icon">
                     <button onclick="removeAttachment()" style="background: white; color: black; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; cursor: pointer; display: flex; justify-content: center; align-items: center; padding: 0; line-height: 1;">×</button>
                 </div>
                 <div id="ai-attachment-text" style="color: white; font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Segoe UI', Tahoma, sans-serif;">code.py</div>
@@ -294,8 +294,21 @@ ws = new WebSocket("wss://online-compiler-1-5f6k.onrender.com/ws/run");
             const selectedText = editor.value.substring(editor.selectionStart, editor.selectionEnd);
             const attachContainer = document.getElementById('ai-attachment-container');
             const attachText = document.getElementById('ai-attachment-text');
+            const iconImg = document.getElementById('ai-attachment-icon');
+            
             const language = localStorage.getItem('selectedLanguage') || 'python';
             const ext = {python:'py', cpp:'cpp', java:'java', c:'c', html:'html', css:'css'}[language] || 'txt';
+            
+            const iconMap = {
+                python: 'python/python-original.svg',
+                java: 'java/java-original.svg',
+                cpp: 'cplusplus/cplusplus-original.svg',
+                c: 'c/c-original.svg',
+                html: 'html5/html5-original.svg',
+                css: 'css3/css3-original.svg'
+            };
+            const iconPath = iconMap[language] || 'javascript/javascript-original.svg';
+            iconImg.src = `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${iconPath}`;
 
             if (selectedText.trim()) {
                 attachedCodeContext = selectedText;
