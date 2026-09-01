@@ -90,7 +90,8 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
-        .CodeMirror { height: 100%; font-family: 'Consolas', monospace; font-size: 14px; border-radius: 8px; }
+        .CodeMirror { height: 100%; font-family: 'Consolas', monospace; font-size: 14px; border-radius: 8px; background-color: #0b0f19 !important; }
+      .CodeMirror-gutters { background-color: #0b0f19 !important; border-right: 1px solid #1e2532 !important; }
     </style>
 </head>
 <body>
@@ -113,9 +114,7 @@
     <div class="main-container">
         <div class="editor-section">
             <div class="toolbar">
-                <button class="run-btn" id="run-btn" onclick="runCode()">▶ Run</button>
-                <button class="run-btn" id="stop-btn" onclick="stopExecution()" style="display: none; background: linear-gradient(90deg, #ff3333, #be0e0e); box-shadow: 0 0 12px rgba(255, 51, 51, 0.6); margin-right: 10px;">Stop ⏹️</button>
-                <button id="download-btn" onclick="downloadCode()">⬇ Download</button>
+                <button class="run-btn" id="run-btn" onclick="runCode()">▶ Run</button>                <button id="download-btn" onclick="downloadCode()">⬇ Download</button>
                 <button id="ai-btn" class="run-btn" onclick="askAI()" style="margin-left: 10px; background: linear-gradient(90deg, #ff007f, #7f00ff);">✨ Ask AI</button>
             </div>
             <textarea id="code-editor" spellcheck="false" placeholder="Write your code here..."></textarea>
@@ -124,9 +123,12 @@
         <div class="output-section">
             <div class="output-header">
                 <span class="output-title">Output Terminal</span>
-                <button class="clear-btn" onclick="clearOutput()">Clear</button>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button class="run-btn" id="stop-btn" onclick="stopExecution()" style="display: none; background: linear-gradient(90deg, #ff3333, #be0e0e); box-shadow: 0 0 12px rgba(255, 51, 51, 0.6); padding: 10px 16px; font-size: 12px;">Stop ⏹️</button>
+                    <button class="clear-btn" onclick="clearOutput()">Clear</button>
+                </div>
             </div>
-            <div id="terminal-container" style="height: 100%; width: 100%; padding: 10px; background: #2b2b2b;"></div>
+            <div id="terminal-container" style="height: 100%; width: 100%; padding: 10px; background: #000000;"></div>
         </div>
     </div>
 
@@ -188,7 +190,7 @@
 
         // --- Terminal Initialization ---
         const term = new Terminal({
-            theme: { background: '#1e2532' },
+            theme: { background: '#000000' },
             fontFamily: 'Consolas, monospace',
             fontSize: 14,
             cursorBlink: true
@@ -465,7 +467,7 @@
 
         // --- Terminal Initialization ---
         const term = new Terminal({
-            theme: { background: '#1e2532' },
+            theme: { background: '#000000' },
             fontFamily: 'Consolas, monospace',
             fontSize: 14,
             cursorBlink: true
