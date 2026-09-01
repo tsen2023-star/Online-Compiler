@@ -1,366 +1,56 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Compiler - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="landing-container">
+        <div class="landing-header">
+            <div class="logo"><span>&lt;/&gt;</span> CodeCompiler</div>
+            <p class="tagline">Write and Run Python, C++, Java, C, HTML, and CSS</p>
+        </div>
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #1e1e1e;
-    color: #d4d4d4;
-    min-height: 100vh;
-}
-
-/* Landing Page Styles */
-.landing-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 60px 20px;
-}
-
-.landing-header {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.landing-header .logo {
-    font-size: 48px;
-    font-weight: bold;
-    color: #88074e;
-    margin-bottom: 15px;
-}
-
-.landing-header .logo span {
-    color: #569cd6;
-}
-
-.landing-header .tagline {
-    font-size: 20px;
-    color: #808080;
-}
-
-/* Language Grid */
-.language-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    margin-bottom: 50px;
-}
-
-.language-card {
-    background: #252526;
-    border: 1px solid #3e3e42;
-    border-radius: 12px;
-    padding: 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.language-card:hover {
-    background: #2d2d30;
-    border-color: #1e0855;
-    transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgb(136, 7, 78);
-}
-
-.language-card .lang-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
-}
-
-.language-card h3 {
-    font-size: 24px;
-    color: #d4d4d4;
-    margin-bottom: 10px;
-}
-
-.language-card p {
-    font-size: 14px;
-    color: #808080;
-}
-
-/* Features Section */
-.features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-top: 60px;
-}
-
-.feature {
-    text-align: center;
-    padding: 30px;
-}
-
-.feature-icon {
-    font-size: 40px;
-    display: block;
-    margin-bottom: 15px;
-}
-
-.feature h4 {
-    font-size: 20px;
-    color: #d4d4d4;
-    margin-bottom: 10px;
-}
-
-.feature p {
-    font-size: 14px;
-    color: #808080;
-}
-
-/* Header */
-.header {
-    background: #252526;
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #3e3e42;
-    height: 50px;
-}
-
-.logo {
-    font-size: 20px;
-    font-weight: bold;
-    color: #e908a2;
-}
-
-.logo span {
-    color: #569cd6;
-}
-
-/* Language Tabs */
-.language-tabs {
-    display: flex;
-    background: #252526;
-    border-bottom: 1px solid #3e3e42;
-}
-
-.lang-tab {
-    padding: 12px 24px;
-    cursor: pointer;
-    background: #252526;
-    color: #808080;
-    border: none;
-    border-right: 1px solid #3e3e42;
-    font-size: 14px;
-    transition: all 0.2s;
-    font-weight: 500;
-}
-
-.lang-tab:hover {
-    background: #3e3e42;
-    color: #d4d4d4;
-}
-
-.lang-tab.active {
-    background: #1e1e1e;
-    color: #0a87bc;
-    border-bottom: 2px solid #f70505;
-}
-
-/* Main Container */
-.main-container {
-    display: flex;
-    height: calc(100vh - 92px);
-}
-
-/* Editor Section */
-.editor-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid #3e3e42;
-}
-
-.toolbar {
-    background: #2d2d2d;
-    padding: 10px 15px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.toolbar button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-
-.run-btn {
-            background: linear-gradient(45deg, #6a0d67, #3c28d2);
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        <div class="language-grid">
+            <div class="language-card" onclick="selectLanguage('python')">
+                <div class="lang-icon">🐍</div>
+                <h3>Python</h3>
+                <p>Simple and readable</p>
+            </div>
+            <div class="language-card" onclick="selectLanguage('cpp')">
+                <div class="lang-icon">⚙️</div>
+                <h3>C++</h3>
+                <p>Speed and performance</p>
+            </div>
+            <div class="language-card" onclick="selectLanguage('java')">
+                <div class="lang-icon">☕</div>
+                <h3>Java</h3>
+                <p>Enterprise OOP</p>
+            </div>
+            <div class="language-card" onclick="selectLanguage('c')">
+                <div class="lang-icon">⚡</div>
+                <h3>C</h3>
+                <p>Low-level power</p>
+            </div>
+            <div class="language-card" onclick="selectLanguage('html')">
+                <div class="lang-icon">🌐</div>
+                <h3>HTML</h3>
+                <p>Web structure</p>
+            </div>
+            <div class="language-card" onclick="selectLanguage('css')">
+                <div class="lang-icon">🎨</div>
+                <h3>CSS</h3>
+                <p>Web styling</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        function selectLanguage(lang) {
+            localStorage.setItem('selectedLanguage', lang);
+            window.location.href = 'editor.html';
         }
-        .run-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 10px rgb(239, 12, 12);
-        }
-.toolbar .btn {
-    background: #3e3e42;
-    color: #d4d4d4;
-}
-
-.toolbar .btn:hover {
-    background: #505050;
-}
-
-/* Code Editor Textarea */
-#code-editor {
-    flex: 1;
-    width: 100%;
-    background: #1e1e1e;
-    color: #ffffff;
-    border: none;
-    padding: 15px;
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 16px;
-    line-height: 1.6;
-    resize: none;
-    outline: none;
-    tab-size: 4;
-    cursor: text;
-    caret-color: #4ec9b0;
-}
-
-#code-editor::placeholder {
-    color: #808080;
-    font-style: italic;
-}
-
-/* Output Section */
-.output-section {
-    flex: 0.8;
-    display: flex;
-    flex-direction: column;
-    background: #252525;
-}
-
-.output-header {
-    background: #252525;
-    padding: 8px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #3e3e42;
-}
-
-.output-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: #d4d4d4;
-}
-.console-output {
-    flex: 1;
-    padding: 15px;
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 14px;
-    line-height: 1.5;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    color: #d4d4d4;
-    background: #1e1e1e;
-}
-
-.console-output .success {
-    color: #4ec9b0;
-}
-
-.console-output .error {
-    color: #f44747;
-}
-
-.console-output .info {
-    color: #569cd6;
-}
-
-/* Input Area */
-.input-section {
-    background: #252526;
-    padding: 10px 15px;
-    border-top: 1px solid #3e3e42;
-}
-
-.input-label {
-    font-size: 12px;
-    color: #808080;
-    margin-bottom: 5px;
-}
-
-.input-wrapper {
-    display: flex;
-    align-items: center;
-    background: #3c3c3c;
-    border-radius: 4px;
-    padding: 8px 12px;
-}
-
-.input-wrapper .prompt {
-    color: #240363;
-    margin-right: 8px;
-    font-weight: bold;
-}
-
-.input-wrapper input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: #d4d4d4;
-    font-size: 14px;
-    outline: none;
-    font-family: 'Consolas', monospace;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #1e1e1e;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #424242;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #4f4f4f;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-    }
-    
-    .editor-section,
-    .output-section {
-        flex: none;
-        height: 50%;
-    }
-    
-    .language-tabs {
-        overflow-x: auto;
-    }
-    
-    .lang-tab {
-        padding: 10px 15px;
-        font-size: 12px;
-    }
-}
+    </script>
+</body>
+</html>
