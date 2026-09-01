@@ -129,6 +129,7 @@ async def run_code_ws(websocket: WebSocket):
 
             await process.wait()
             await stdout_task
+            stdin_task.cancel()
             
             await websocket.send_text(f"\r\n\r\n=== Code Execution Finished (Exit code {process.returncode}) ===\r\n")
             

@@ -166,6 +166,12 @@
         function switchLanguage(lang) {
             localStorage.setItem('selectedLanguage', lang);
             
+            
+            // Highlight active tab
+            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            const activeTab = document.querySelector(`.lang-tab[data-lang="${lang}"]`);
+            if (activeTab) activeTab.classList.add('active');
+            
             // Set Mode
             editor.setOption('mode', langModes[lang]);
 
@@ -212,7 +218,7 @@
             term.write('\x1b[36mConnecting to server...\x1b[0m\r\n');
             
             // Toggle Buttons
-            document.getElementById('run-btn').style.display = 'none';
+            
             document.getElementById('stop-btn').style.display = 'inline-block';
 
             const ws = new WebSocket('wss://online-compiler-1-5f6k.onrender.com/ws/run');
@@ -229,7 +235,7 @@
             ws.onclose = () => {
                 term.write('\r\n\x1b[33mConnection closed.\x1b[0m\r\n');
                 currentWs = null;
-                document.getElementById('run-btn').style.display = 'inline-block';
+                
                 document.getElementById('stop-btn').style.display = 'none';
             };
 
@@ -443,6 +449,12 @@
             localStorage.setItem('selectedLanguage', lang);
             document.getElementById('current-lang').innerText = languageNames[lang];
             
+            
+            // Highlight active tab
+            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            const activeTab = document.querySelector(`.lang-tab[data-lang="${lang}"]`);
+            if (activeTab) activeTab.classList.add('active');
+            
             // Set Mode
             editor.setOption('mode', langModes[lang]);
 
@@ -489,7 +501,7 @@
             term.write('\x1b[36mConnecting to server...\x1b[0m\r\n');
             
             // Toggle Buttons
-            document.getElementById('run-btn').style.display = 'none';
+            
             document.getElementById('stop-btn').style.display = 'inline-block';
 
             const ws = new WebSocket('wss://online-compiler-1-5f6k.onrender.com/ws/run');
@@ -506,7 +518,7 @@
             ws.onclose = () => {
                 term.write('\r\n\x1b[33mConnection closed.\x1b[0m\r\n');
                 currentWs = null;
-                document.getElementById('run-btn').style.display = 'inline-block';
+                
                 document.getElementById('stop-btn').style.display = 'none';
             };
 
