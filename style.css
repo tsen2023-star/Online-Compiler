@@ -676,15 +676,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #06090f;
+    background: var(--bg2);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #243247;
+    background: var(--border);
 
     border-radius: 5px;
 
-    border: 2px solid #06090f;
+    border: 2px solid var(--bg2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
