@@ -11,7 +11,7 @@
     <div class="landing-container">
         <div class="landing-header">
             <div class="logo"><span>&lt;/&gt;</span> CodeCompiler</div>
-            <p class="tagline">Write and Run Python, C++, Java, C, HTML, and CSS</p>
+            <p class="tagline">Write and Run Python, C++, Java, C, SQL, and Web</p>
         </div>
 
         <div class="language-grid">
@@ -36,14 +36,18 @@
                 <p>Low-level power</p>
             </div>
             <div class="language-card" onclick="selectLanguage('html')">
-                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                <h3>HTML</h3>
-                <p>Web structure</p>
+                <div class="lang-icon" style="display: flex; justify-content: center;">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" style="width: 45px; height: 45px; z-index: 3; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" style="width: 45px; height: 45px; z-index: 2; margin-left: -15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" style="width: 45px; height: 45px; z-index: 1; margin-left: -15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+                </div>
+                <h3>Web Dev</h3>
+                <p>HTML, CSS, & JS</p>
             </div>
-            <div class="language-card" onclick="selectLanguage('css')">
-                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                <h3>CSS</h3>
-                <p>Web styling</p>
+            <div class="language-card" onclick="selectLanguage('sql')">
+                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+                <h3>SQL</h3>
+                <p>Database queries</p>
             </div>
         </div>
     </div>

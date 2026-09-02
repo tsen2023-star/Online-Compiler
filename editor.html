@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=js_syntax_fix">
+    <link rel="stylesheet" href="style.css?v=massive_update_web_sql">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -103,8 +103,11 @@
         <button class="lang-tab" data-lang="cpp" onclick="switchLanguage('cpp')">C++</button>
         <button class="lang-tab" data-lang="java" onclick="switchLanguage('java')">Java</button>
         <button class="lang-tab" data-lang="c" onclick="switchLanguage('c')">C</button>
+        <button class="lang-tab" data-lang="sql" onclick="switchLanguage('sql')">SQL</button>
+        <div style="width: 1px; height: 20px; background: var(--border); margin: 0 10px;"></div>
         <button class="lang-tab" data-lang="html" onclick="switchLanguage('html')">HTML</button>
         <button class="lang-tab" data-lang="css" onclick="switchLanguage('css')">CSS</button>
+        <button class="lang-tab" data-lang="js" onclick="switchLanguage('js')">JS</button>
     
         <div style="margin-left: auto; display: flex; align-items: center; padding-right: 15px;">
             <label class="theme-switch" for="theme-checkbox">
@@ -267,11 +270,13 @@
             c: "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, World!\");\n    return 0;\n}",
             java: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
             html: "<!DOCTYPE html>\n<html>\n<head>\n    <title>Test</title>\n</head>\n<body>\n    <h1>Hello World</h1>\n</body>\n</html>",
-            css: "body {\n    background-color: #2b2b2b;\n    color: white;\n}"
+            css: "body {\n    background-color: #2b2b2b;\n    color: white;\n}",
+            js: "console.log('Hello from JS!');",
+            sql: "-- Write your SQL queries here\nCREATE TABLE users (id INT, name VARCHAR(50));\nINSERT INTO users VALUES (1, 'Alice');\nSELECT * FROM users;"
         };
 
         const languageNames = {
-            python: 'Python', cpp: 'C++', c: 'C', java: 'Java', html: 'HTML', css: 'CSS'
+            python: 'Python', cpp: 'C++', c: 'C', java: 'Java', sql: 'SQL', html: 'HTML', css: 'CSS', js: 'JS'
         };
 
         function switchLanguage(lang) {
@@ -324,6 +329,36 @@
 
             const lang = localStorage.getItem('selectedLanguage') || 'python';
             const code = editor.getValue();
+            
+            // Save current code immediately
+            localStorage.setItem('code_' + lang, code);
+
+            if (['html', 'css', 'js'].includes(lang)) {
+                // Run Web Preview
+                const htmlCode = localStorage.getItem('code_html') || '';
+                const cssCode = localStorage.getItem('code_css') || '';
+                const jsCode = localStorage.getItem('code_js') || '';
+                
+                const combined = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>${cssCode}</style>
+                    </head>
+                    <body>
+                        ${htmlCode}
+                        <script>${jsCode}<\/script>
+                    </body>
+                    </html>
+                `;
+                
+                const preview = document.getElementById('web-preview');
+                const doc = preview.contentDocument || preview.contentWindow.document;
+                doc.open();
+                doc.write(combined);
+                doc.close();
+                return;
+            }
             
             term.clear();
             term.write('\x1b[36mConnecting to server...\x1b[0m\r\n');
@@ -439,8 +474,10 @@
                 java: 'java/java-original.svg',
                 cpp: 'cplusplus/cplusplus-original.svg',
                 c: 'c/c-original.svg',
+                sql: 'mysql/mysql-original.svg',
                 html: 'html5/html5-original.svg',
-                css: 'css3/css3-original.svg'
+                css: 'css3/css3-original.svg',
+                js: 'javascript/javascript-original.svg'
             };
             const iconPath = iconMap[language] || 'javascript/javascript-original.svg';
             if (iconImg) iconImg.src = `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${iconPath}`;
