@@ -49,14 +49,7 @@
         }
 
         /* Clear Button Header Styles */
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 15px;
-            background: #1e1e1e;
-            border-bottom: 1px solid #333;
-        }
+        
         
         .clear-btn {
             background: linear-gradient(45deg, #804ea1, #a70da1);
@@ -100,7 +93,7 @@
         <div class="logo"><span>&lt;/&gt;</span> Code Compiler</div>
         <div class="header-actions" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
             <button id="home-btn" onclick="window.location.href='index.html'">Home</button>
-            <button id="theme-btn" onclick="toggleTheme()" style="background: transparent; border: 1px solid var(--cyan); color: var(--cyan); border-radius: 4px; cursor: pointer; padding: 4px 10px; font-size: 12px; font-weight: bold; width: 100%;">☀️ Light</button>
+            
         </div>
     </div>
 
@@ -111,6 +104,20 @@
         <button class="lang-tab" data-lang="c" onclick="switchLanguage('c')">C</button>
         <button class="lang-tab" data-lang="html" onclick="switchLanguage('html')">HTML</button>
         <button class="lang-tab" data-lang="css" onclick="switchLanguage('css')">CSS</button>
+    
+        <div style="margin-left: auto; display: flex; align-items: center; padding-right: 15px;">
+            <label class="theme-switch" for="theme-checkbox">
+                <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()">
+                <div class="theme-slider">
+                    <span class="theme-text theme-text-left">DARK<br>MODE</span>
+                    <span class="theme-text theme-text-right">LIGHT<br>MODE</span>
+                    <div class="theme-thumb">
+                        <span class="theme-icon theme-icon-moon">🌙</span>
+                        <span class="theme-icon theme-icon-sun">☀️</span>
+                    </div>
+                </div>
+            </label>
+        </div>
     </div>
 
     <div class="main-container">
@@ -124,10 +131,10 @@
 
         <div class="output-section">
             <div class="output-header">
-                <span class="output-title">Output Terminal</span>
+                <span class="output-title" style="font-weight: 600; font-size: 14px; color: var(--cyan);">Output Terminal</span>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button class="run-btn" id="stop-btn" onclick="stopExecution()" style="display: none; background: linear-gradient(90deg, #ff3333, #be0e0e); box-shadow: 0 0 12px rgba(255, 51, 51, 0.6); padding: 10px 16px; font-size: 12px;">Stop ⏹️</button>
-                    <button class="clear-btn" onclick="clearOutput()">Clear</button>
+                    <button class="run-btn" id="stop-btn" onclick="stopExecution()" style="display: none; background: linear-gradient(90deg, #ff3333, #be0e0e); box-shadow: 0 0 12px rgba(255, 51, 51, 0.6); padding: 8px 16px; font-size: 13px;">Stop ⏹️</button>
+                    <button class="clear-btn" onclick="clearOutput()" style="padding: 8px 16px; font-size: 13px;">Clear</button>
                 </div>
             </div>
             <div id="terminal-container" style="height: 100%; width: 100%; padding: 10px; background: #000000;"></div>
@@ -166,6 +173,39 @@
     </div>
 <script>
         
+        
+        // --- Resizer Logic ---
+        const resizer = document.getElementById('resizer');
+        const leftSide = document.querySelector('.editor-section');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+            leftSide.style.pointerEvents = 'none'; // Prevent iframe/editor from stealing mouse events
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const containerOffsetLeft = leftSide.parentElement.offsetLeft;
+            const pointerRelativeXpos = e.clientX - containerOffsetLeft;
+            const containerWidth = leftSide.parentElement.clientWidth;
+            
+            const minWidth = 200; // minimum width
+            if (pointerRelativeXpos > minWidth && pointerRelativeXpos < containerWidth - minWidth) {
+                leftSide.style.flex = 'none';
+                leftSide.style.width = pointerRelativeXpos + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = 'default';
+                leftSide.style.pointerEvents = 'auto';
+            }
+        });
+
         // --- Theme Logic ---
         function toggleTheme() {
             const isLight = document.body.classList.toggle('light-mode');
@@ -174,8 +214,8 @@
         }
 
         function updateThemeUI(isLight) {
-            const themeBtn = document.getElementById('theme-btn');
-            themeBtn.innerHTML = isLight ? '🌙 Dark' : '☀️ Light';
+            const checkbox = document.getElementById('theme-checkbox');
+            if (checkbox) checkbox.checked = isLight;
             
             // Update CodeMirror
             editor.setOption('theme', isLight ? 'default' : 'monokai');
