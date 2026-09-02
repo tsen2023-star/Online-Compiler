@@ -146,7 +146,7 @@
     <div id="ai-modal" style="display: none; position: fixed; bottom: 20px; right: 20px; width: 450px; max-height: 80vh; background: #111725; border: 1px solid #9d00ff; border-radius: 10px; box-shadow: 0 0 20px rgba(157, 0, 255, 0.4); color: white; flex-direction: column; z-index: 1000; overflow: hidden; resize: both;">
         <div id="ai-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #263449; padding: 12px 15px; background: linear-gradient(90deg, #1e2532, #111725); cursor: grab;">
             <h3 style="margin: 0; color: #00f5ff; font-size: 16px; text-shadow: 0 0 8px rgba(0, 245, 255, 0.6); pointer-events: none;">✨ AI Code Assistant</h3>
-            <button onclick="document.getElementById('ai-modal').style.display='none'" style="background: transparent; border: none; color: white; font-size: 16px; cursor: pointer;">✖</button>
+            <button id="ai-close-btn" onclick="document.getElementById('ai-modal').style.display='none'" style="background: transparent; border: none; color: white; font-size: 16px; cursor: pointer;">✖</button>
         </div>
         
         <div id="ai-response" style="flex: 1; overflow-y: auto; padding: 15px; font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.5; font-size: 14px;">
@@ -164,7 +164,7 @@
             </div>
         </div>
 
-        <div style="padding: 15px; background: #0b0f19;">
+        <div id="ai-input-container" style="padding: 15px; background: #0b0f19;">
             <textarea id="ai-prompt" placeholder="Ask AI to write code, find errors, or explain concepts..." style="width: 100%; height: 60px; background: #1e2532; border: 1px solid #3d4b63; border-radius: 6px; color: white; padding: 10px; box-sizing: border-box; font-family: inherit; resize: none; margin-bottom: 10px;"></textarea>
             <div style="display: flex; justify-content: flex-end;">
                 <button class="run-btn" onclick="sendToAI()" style="padding: 6px 15px; font-size: 13px;">Send 🚀</button>
