@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
-    <link rel="stylesheet" href="style.css?v=scrollbar_fix_v2">
+    <link rel="stylesheet" href="style.css?v=drag_and_leak_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -193,10 +193,13 @@
             const pointerRelativeXpos = e.clientX - containerOffsetLeft;
             const containerWidth = leftSide.parentElement.clientWidth;
             
-            const minWidth = 200; // minimum width
+            const minWidth = 50; // minimum width
             if (pointerRelativeXpos > minWidth && pointerRelativeXpos < containerWidth - minWidth) {
                 leftSide.style.flex = 'none';
                 leftSide.style.width = pointerRelativeXpos + 'px';
+                if (typeof fitAddon !== 'undefined') {
+                    fitAddon.fit();
+                }
             }
         });
 
@@ -206,6 +209,9 @@
                 document.body.style.cursor = 'default';
                 document.body.style.userSelect = ''; // Restore text selection
                 leftSide.style.pointerEvents = 'auto';
+                if (typeof fitAddon !== 'undefined') {
+                    fitAddon.fit();
+                }
             }
         });
 
@@ -539,272 +545,5 @@
             }
         }
     </script>
-
-</body>\n</html>",
-            css: "body {\n    background-color: #2b2b2b;\n    color: white;\n}"
-        };
-
-        const languageNames = {
-            python: 'Python', cpp: 'C++', c: 'C', java: 'Java', html: 'HTML', css: 'CSS'
-        };
-
-        function switchLanguage(lang) {
-            localStorage.setItem('selectedLanguage', lang);
-            document.getElementById('current-lang').innerText = languageNames[lang];
-            
-            
-            // Highlight active tab
-            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
-            const activeTab = document.querySelector(`.lang-tab[data-lang="${lang}"]`);
-            if (activeTab) activeTab.classList.add('active');
-            
-            // Set Mode
-            editor.setOption('mode', langModes[lang]);
-
-            // Try to load saved code from local storage
-            const savedCode = localStorage.getItem('code_' + lang);
-            if (savedCode) {
-                editor.setValue(savedCode);
-            } else {
-                editor.setValue(defaultCode[lang] || "");
-            }
-        }
-
-        // Auto-save feature
-        editor.on('change', () => {
-            const lang = localStorage.getItem('selectedLanguage') || 'python';
-            localStorage.setItem('code_' + lang, editor.getValue());
-        });
-
-        // Initialize on load
-        const savedLang = localStorage.getItem('selectedLanguage') || 'python';
-        switchLanguage(savedLang);
-
-        // --- Terminal Initialization ---
-        const term = new Terminal({
-            theme: { background: '#000000' },
-            fontFamily: 'Consolas, monospace',
-            fontSize: 14,
-            cursorBlink: true
-        });
-        const fitAddon = new FitAddon.FitAddon();
-        term.loadAddon(fitAddon);
-        term.open(document.getElementById('terminal-container'));
-        fitAddon.fit();
-
-        let currentWs = null;
-
-        function runCode() {
-            if (currentWs) return; // already running
-
-            const lang = localStorage.getItem('selectedLanguage') || 'python';
-            const code = editor.getValue();
-            
-            term.clear();
-            term.write('\x1b[36mConnecting to server...\x1b[0m\r\n');
-            
-            // Toggle Buttons
-            
-            document.getElementById('stop-btn').style.display = 'inline-block';
-
-            const ws = new WebSocket('wss://online-compiler-1-5f6k.onrender.com/ws/run');
-            currentWs = ws;
-
-            ws.onopen = () => {
-                ws.send(JSON.stringify({ language: lang, code: code }));
-            };
-
-            ws.onmessage = (event) => {
-                term.write(event.data);
-            };
-
-            ws.onclose = () => {
-                term.write('\r\n\x1b[33mConnection closed.\x1b[0m\r\n');
-                currentWs = null;
-                
-                document.getElementById('stop-btn').style.display = 'none';
-            };
-
-            ws.onerror = (err) => {
-                term.write('\r\n\x1b[31mWebSocket Error.\x1b[0m\r\n');
-            };
-
-            term.onData((data) => {
-                if (currentWs && currentWs.readyState === WebSocket.OPEN) {
-                    currentWs.send(data);
-                }
-            });
-        }
-
-        function stopExecution() {
-            if (currentWs && currentWs.readyState === WebSocket.OPEN) {
-                currentWs.send('{"command": "stop"}');
-            }
-        }
-
-        function clearOutput() {
-            term.clear();
-            term.write('Terminal cleared.\r\n');
-        }
-
-        window.addEventListener('resize', () => {
-            fitAddon.fit();
-        });
-        
-        // --- AI Assistant Logic ---
-        
-        dragElement(document.getElementById("ai-modal"));
-        function dragElement(elmnt) {
-            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            if (document.getElementById("ai-header")) {
-                document.getElementById("ai-header").onmousedown = dragMouseDown;
-            } else {
-                elmnt.onmousedown = dragMouseDown;
-            }
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
-                pos3 = e.clientX; pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-            }
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                elmnt.style.bottom = "auto";
-                elmnt.style.right = "auto";
-            }
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
-
-        let attachedCodeContext = "";
-
-        function askAI() {
-            document.getElementById('ai-modal').style.display = 'flex';
-            
-            const selectedText = editor.getSelection();
-            const attachContainer = document.getElementById('ai-attachment-container');
-            const attachText = document.getElementById('ai-attachment-text');
-            const iconImg = document.getElementById('ai-attachment-icon');
-            
-            const language = localStorage.getItem('selectedLanguage') || 'python';
-            const ext = {python:'py', cpp:'cpp', java:'java', c:'c', html:'html', css:'css'}[language] || 'txt';
-            
-            const iconMap = {
-                python: 'python/python-original.svg',
-                java: 'java/java-original.svg',
-                cpp: 'cplusplus/cplusplus-original.svg',
-                c: 'c/c-original.svg',
-                html: 'html5/html5-original.svg',
-                css: 'css3/css3-original.svg'
-            };
-            const iconPath = iconMap[language] || 'javascript/javascript-original.svg';
-            if (iconImg) iconImg.src = `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${iconPath}`;
-
-            if (selectedText.trim()) {
-                attachedCodeContext = selectedText;
-                attachText.innerText = "code." + ext;
-                attachContainer.style.display = 'block';
-            } else if (editor.getValue().trim()) {
-                attachedCodeContext = editor.getValue();
-                attachText.innerText = "code." + ext;
-                attachContainer.style.display = 'block';
-            } else {
-                attachedCodeContext = "";
-                attachContainer.style.display = 'none';
-            }
-
-            if (document.getElementById('ai-response').innerText.includes("How can I help you")) {
-                document.getElementById('ai-prompt').focus();
-            }
-        }
-
-        function removeAttachment() {
-            attachedCodeContext = "";
-            document.getElementById('ai-attachment-container').style.display = 'none';
-        }
-
-        // Configure Marked.js with custom renderer for copying code
-        const renderer = new marked.Renderer();
-        renderer.code = function({text, lang}) {
-            const encodedCode = encodeURIComponent(text);
-            const safeCode = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return `<div style="background: #1e2532; border-radius: 8px; margin: 15px 0; border: 1px solid #3d4b63; overflow: hidden;">
-                       <div style="background: #111725; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3d4b63;">
-                       <span style="color: #a8b2c1; font-size: 13px; font-weight: bold;">&lt;/&gt; ${lang || 'Code'}</span>
-                       <div>
-                       <button class="ai-copy-btn" onclick="navigator.clipboard.writeText(decodeURIComponent('${encodedCode}'))">📋 Copy</button>
-                       <button class="ai-insert-btn" onclick="editor.replaceSelection(decodeURIComponent('${encodedCode}')); document.getElementById('ai-modal').style.display='none';">▶ Insert</button>
-                       </div></div>
-                       <pre style="margin: 0; padding: 15px; color: #00f5ff; font-family: 'Consolas', monospace; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;"><code>${safeCode}</code></pre>
-                    </div>`;
-        };
-        marked.use({ renderer });
-
-        async function sendToAI() {
-            const prompt = document.getElementById('ai-prompt').value;
-            const language = localStorage.getItem('selectedLanguage') || 'python';
-            const responseDiv = document.getElementById('ai-response');
-            
-            if (!attachedCodeContext.trim() && !prompt.trim()) {
-                alert("Please provide some code in the editor or type a question!");
-                return;
-            }
-
-            responseDiv.innerHTML = '<span style="color: #9d00ff;">Thinking... ⏳</span>';
-            document.getElementById('ai-prompt').value = '';
-            
-            const codeToSend = attachedCodeContext;
-            document.getElementById('ai-attachment-container').style.display = 'none';
-            attachedCodeContext = "";
-
-            try {
-                const response = await fetch('https://online-compiler-1-5f6k.onrender.com/ask-ai', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: codeToSend, language: language, prompt: prompt })
-                });
-                
-                // If it's a JSON response (like an error), catch it
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.indexOf("application/json") !== -1) {
-                    const data = await response.json();
-                    if (data.error) {
-                        responseDiv.innerHTML = '<span style="color: #ff3864;">Error: ' + data.error + '</span>';
-                        return;
-                    }
-                }
-
-                // Streaming Response Reader
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder('utf-8');
-                let accumulatedText = "";
-                responseDiv.innerHTML = ""; // clear thinking
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    
-                    const chunk = decoder.decode(value, { stream: true });
-                    accumulatedText += chunk;
-                    
-                    // Render dynamically using marked.js
-                    responseDiv.innerHTML = marked.parse(accumulatedText);
-                    responseDiv.scrollTop = responseDiv.scrollHeight; // Auto-scroll to bottom
-                }
-            } catch (err) {
-                responseDiv.innerHTML = '<span style="color: #ff3864;">Failed to connect to the backend API. Please make sure the server is online!</span>';
-            }
-        }
-</script>
 </body>
 </html>
