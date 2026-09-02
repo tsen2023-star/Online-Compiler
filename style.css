@@ -676,15 +676,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg2);
+    background: #06090f;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: #243247;
 
     border-radius: 5px;
 
-    border: 2px solid var(--bg2);
+    border: 2px solid #06090f;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -737,3 +737,199 @@ body {
         white-space: nowrap;
     }
 }
+
+.ai-copy-btn {
+    background: transparent; 
+    border: 1px solid #a8b2c1; 
+    color: white; 
+    border-radius: 4px; 
+    padding: 4px 10px; 
+    cursor: pointer; 
+    font-size: 12px; 
+    margin-right: 5px; 
+    transition: all 0.2s ease-in-out;
+}
+.ai-copy-btn:hover {
+    background: rgba(168, 178, 193, 0.2);
+    box-shadow: 0 0 8px rgba(168, 178, 193, 0.4);
+}
+.ai-insert-btn {
+    background: linear-gradient(90deg, #9d00ff, #2962ff); 
+    border: none; 
+    color: white; 
+    border-radius: 4px; 
+    padding: 5px 12px; 
+    cursor: pointer; 
+    font-size: 12px; 
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+.ai-insert-btn:hover {
+    box-shadow: 0 0 12px rgba(157, 0, 255, 0.7);
+    transform: scale(1.05);
+}
+
+
+/* Light Mode Overrides */
+body.light-mode {
+    --bg: #f0f4f8;
+    --bg2: #ffffff;
+    --panel: #f9fafb;
+    --card: #ffffff;
+    --card-hover: #e2e8f0;
+
+    --border: #cbd5e1;
+    --cyan: #0284c7;
+    --cyan-dark: #0369a1;
+
+    --purple: #7c3aed;
+    --purple-light: #8b5cf6;
+
+    --text: #1e293b;
+    --text-secondary: #475569;
+    --muted: #64748b;
+}
+
+body.light-mode #ai-modal,
+body.light-mode #ai-header,
+body.light-mode #ai-attachment-container,
+body.light-mode .output-header {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+}
+
+body.light-mode #ai-prompt {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light-mode #terminal-container {
+    background: #ffffff !important;
+}
+
+
+/* --- Resizer CSS --- */
+.resizer {
+    width: 6px; flex: 0 0 6px;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    cursor: col-resize;
+    z-index: 10;
+    transition: background 0.2s;
+}
+.resizer:hover, .resizer:active {
+    background: var(--cyan);
+}
+
+/* --- 3D Theme Toggle Switch --- */
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 120px;
+    height: 36px;
+}
+.theme-switch input { opacity: 0; width: 0; height: 0; }
+.theme-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #263449;
+    transition: .4s;
+    border-radius: 36px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+.theme-thumb {
+    position: absolute;
+    height: 28px; width: 28px;
+    left: 4px; bottom: 3px;
+    background-color: white;
+    transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 2;
+    transform: translateX(82px); /* Default Dark mode */
+}
+.theme-text {
+    position: absolute;
+    font-size: 11px;
+    font-weight: 800;
+    color: #9baac0;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    text-align: center;
+    transition: .4s;
+}
+.theme-text-left { left: 16px; opacity: 1; }
+.theme-text-right { right: 14px; opacity: 0; }
+.theme-icon { position: absolute; font-size: 16px; transition: .4s; display: flex; align-items: center; justify-content: center; }
+.theme-icon-moon { opacity: 1; transform: scale(1); }
+.theme-icon-sun { opacity: 0; transform: scale(0.5); }
+
+/* Light Mode Overrides for Slider */
+body.light-mode .theme-slider {
+    background-color: #e2e8f0;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+body.light-mode .theme-thumb {
+    transform: translateX(0); /* Slide left */
+}
+body.light-mode .theme-text-left { opacity: 0; }
+body.light-mode .theme-text-right { opacity: 1; color: #64748b; }
+body.light-mode .theme-icon-moon { opacity: 0; transform: scale(0.5); }
+body.light-mode .theme-icon-sun { opacity: 1; transform: scale(1); }
+
+
+/* --- Resizer T-Junction Fix --- */
+.resizer {
+    position: relative;
+}
+
+
+/* --- Bulletproof Light Mode Editor --- */
+body.light-mode .CodeMirror {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+}
+body.light-mode .CodeMirror-gutters {
+    background-color: #f1f5f9 !important;
+    border-right: 1px solid #cbd5e1 !important;
+}
+body.light-mode .CodeMirror-linenumber {
+    color: #94a3b8 !important;
+}
+
+/* --- AI Modal Light Mode Fixes --- */
+body.light-mode #ai-close-btn {
+    color: #1e293b !important;
+}
+body.light-mode #ai-input-container {
+    background: #f8fafc !important;
+    border-top: 1px solid var(--border);
+}
+
+
+/* --- Force Perfect Header Alignment --- */
+.toolbar, .output-header {
+    height: 56px !important;
+    padding: 0 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: var(--bg2) !important;
+}
+.toolbar {
+    gap: 10px !important;
+}
+.output-header {
+    justify-content: space-between !important;
+}
+
