@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
-    <link rel="stylesheet" href="style.css?v=drag_and_leak_fix">
+    <link rel="stylesheet" href="style.css?v=drag_limit_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -193,7 +193,8 @@
             const pointerRelativeXpos = e.clientX - containerOffsetLeft;
             const containerWidth = leftSide.parentElement.clientWidth;
             
-            const minWidth = 50; // minimum width
+            const cssTab = document.querySelector('.lang-tab[data-lang="css"]');
+            const minWidth = cssTab ? cssTab.offsetLeft : 50; // Stop exactly at CSS tab boundary
             if (pointerRelativeXpos > minWidth && pointerRelativeXpos < containerWidth - minWidth) {
                 leftSide.style.flex = 'none';
                 leftSide.style.width = pointerRelativeXpos + 'px';
