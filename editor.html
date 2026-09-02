@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
-    <link rel="stylesheet" href="style.css?v=bulletproof_t_junction">
+    <link rel="stylesheet" href="style.css?v=drag_shrink_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -183,6 +183,7 @@
         resizer.addEventListener('mousedown', (e) => {
             isResizing = true;
             document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none'; // Prevent text selection
             leftSide.style.pointerEvents = 'none'; // Prevent iframe/editor from stealing mouse events
         });
 
@@ -203,6 +204,7 @@
             if (isResizing) {
                 isResizing = false;
                 document.body.style.cursor = 'default';
+                document.body.style.userSelect = ''; // Restore text selection
                 leftSide.style.pointerEvents = 'auto';
             }
         });
