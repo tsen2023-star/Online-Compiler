@@ -890,16 +890,7 @@ body.light-mode .theme-icon-sun { opacity: 1; transform: scale(1); }
 .resizer {
     position: relative;
 }
-.resizer::before {
-    content: "";
-    position: absolute;
-    top: 55px;
-    left: -1px;
-    right: -1px;
-    height: 1px;
-    background: var(--border);
-    z-index: 11;
-}
+
 
 /* --- Bulletproof Light Mode Editor --- */
 body.light-mode .CodeMirror {
@@ -940,6 +931,4 @@ body.light-mode #ai-input-container {
 .output-header {
     justify-content: space-between !important;
 }
-.resizer::before {
-    top: 55px !important;
-}
+
