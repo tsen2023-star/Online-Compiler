@@ -922,3 +922,24 @@ body.light-mode #ai-input-container {
     background: #f8fafc !important;
     border-top: 1px solid var(--border);
 }
+
+
+/* --- Force Perfect Header Alignment --- */
+.toolbar, .output-header {
+    height: 56px !important;
+    padding: 0 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: var(--bg2) !important;
+}
+.toolbar {
+    gap: 10px !important;
+}
+.output-header {
+    justify-content: space-between !important;
+}
+.resizer::before {
+    top: 55px !important;
+}
