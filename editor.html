@@ -92,6 +92,15 @@
     </style>
 </head>
 <body>
+    <script>
+        window.addEventListener('error', function(e) {
+            const errDiv = document.createElement('div');
+            errDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:red; color:white; z-index:99999; padding:20px; font-size:16px; font-family:sans-serif;';
+            errDiv.innerHTML = '<b>JS ERROR:</b> ' + e.message + '<br><b>File:</b> ' + e.filename + '<br><b>Line:</b> ' + e.lineno;
+            document.body.appendChild(errDiv);
+        });
+    </script>
+
     <div class="header">
         <div class="logo"><span>&lt;/&gt;</span> Code Compiler</div>
         <div class="header-actions" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
@@ -318,7 +327,16 @@
             cpp: "#include <iostream>\n\nint main() {\n    std::cout << \"Hello, World!\";\n    return 0;\n}",
             c: "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, World!\");\n    return 0;\n}",
             java: "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}",
-            html: "<!DOCTYPE html>\n<html>\n<head>\n    <title>Test</title>\n</head>\n<body>\n    <h1>Hello World</h1>\n</body>\n</html>",
+            html: "<!DOCTYPE html>\n<html>\n<head>\n    <title>Test</title>\n</head>\n<body>
+    <script>
+        window.addEventListener('error', function(e) {
+            const errDiv = document.createElement('div');
+            errDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:red; color:white; z-index:99999; padding:20px; font-size:16px; font-family:sans-serif;';
+            errDiv.innerHTML = '<b>JS ERROR:</b> ' + e.message + '<br><b>File:</b> ' + e.filename + '<br><b>Line:</b> ' + e.lineno;
+            document.body.appendChild(errDiv);
+        });
+    </script>
+\n    <h1>Hello World</h1>\n</body>\n</html>",
             css: "body {\n    background-color: #2b2b2b;\n    color: white;\n}",
             js: "console.log('Hello from JS!');",
             sql: "-- Write your SQL queries here\nCREATE TABLE users (id INT, name VARCHAR(50));\nINSERT INTO users VALUES (1, 'Alice');\nSELECT * FROM users;"
@@ -488,6 +506,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <script>
+        window.addEventListener('error', function(e) {
+            const errDiv = document.createElement('div');
+            errDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:red; color:white; z-index:99999; padding:20px; font-size:16px; font-family:sans-serif;';
+            errDiv.innerHTML = '<b>JS ERROR:</b> ' + e.message + '<br><b>File:</b> ' + e.filename + '<br><b>Line:</b> ' + e.lineno;
+            document.body.appendChild(errDiv);
+        });
+    </script>
+
     <h1>Hello, World!</h1>
     <p>Edit HTML, CSS and JS files and see live preview.</p>
     <script src="script.js"><\/script>
