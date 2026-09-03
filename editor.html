@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=legacy_state_fix">
+    <link rel="stylesheet" href="style.css?v=tdz_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -344,8 +344,10 @@
             localStorage.setItem('selectedLanguage', lang);
             
             // Exit web dev mode if coming from it
-            if (isWebDevMode) {
-                exitWebDevMode();
+            if (typeof isWebDevMode !== 'undefined' && isWebDevMode) {
+                if (typeof exitWebDevMode === 'function') {
+                    exitWebDevMode();
+                }
             }
 
             // Highlight active tab
