@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=webdev_layout_fix">
+    <link rel="stylesheet" href="style.css?v=init_order_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -329,6 +329,14 @@
         };
 
         function switchLanguage(lang) {
+            // Handle webdev mode specially
+            if (lang === 'webdev') {
+                if (typeof enterWebDevMode === 'function') {
+                    enterWebDevMode();
+                }
+                return;
+            }
+
             localStorage.setItem('selectedLanguage', lang);
             
             // Exit web dev mode if coming from it
@@ -361,7 +369,14 @@
 
         // Initialize on load
         const savedLang = localStorage.getItem('selectedLanguage') || 'python';
-        switchLanguage(savedLang);
+        // If webdev was the last mode, load python for now;
+        // enterWebDevMode() will be called after it's defined (see IIFE below)
+        if (savedLang !== 'webdev') {
+            switchLanguage(savedLang);
+        } else {
+            // Fallback to python display while webdev logic loads below
+            switchLanguage('python');
+        }
 
         // --- Terminal Initialization ---
         const term = new Terminal({
@@ -793,10 +808,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // On page load: if last session was webdev mode, enter it
+        // (This IIFE runs AFTER enterWebDevMode is defined - safe to call)
         (function() {
             const sl = localStorage.getItem('selectedLanguage');
             if (sl === 'webdev') {
                 enterWebDevMode();
+            } else {
+                // Re-run switchLanguage now that all functions are defined
+                // to ensure the correct tab is highlighted
+                const currentLang = localStorage.getItem('selectedLanguage') || 'python';
+                document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+                const tab = document.querySelector(`.lang-tab[data-lang="${currentLang}"]`);
+                if (tab) tab.classList.add('active');
             }
         })();
 
