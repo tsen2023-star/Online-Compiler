@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=massive_update_web_sql">
+    <link rel="stylesheet" href="style.css?v=webdev_engine_v1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -80,6 +80,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
     <!-- Marked.js for streaming markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
@@ -105,9 +107,7 @@
         <button class="lang-tab" data-lang="c" onclick="switchLanguage('c')">C</button>
         <button class="lang-tab" data-lang="sql" onclick="switchLanguage('sql')">SQL</button>
         <div style="width: 1px; height: 20px; background: var(--border); margin: 0 10px;"></div>
-        <button class="lang-tab" data-lang="html" onclick="switchLanguage('html')">HTML</button>
-        <button class="lang-tab" data-lang="css" onclick="switchLanguage('css')">CSS</button>
-        <button class="lang-tab" data-lang="js" onclick="switchLanguage('js')">JS</button>
+        <button class="lang-tab" data-lang="webdev" id="webdev-tab" onclick="enterWebDevMode()">Web</button>
     
         <div style="margin-left: auto; display: flex; align-items: center; padding-right: 15px;">
             <label class="theme-switch" for="theme-checkbox">
@@ -124,10 +124,57 @@
         </div>
     </div>
 
-    <div class="main-container">
+    <!-- ======= WEB DEV MODE PANEL (HTML/CSS/JS only) ======= -->
+    <div id="webdev-panel" style="display:none; flex: 1; overflow: hidden; display: none; flex-direction: row;">
+        <!-- File Sidebar -->
+        <div id="file-sidebar" style="width: 130px; flex-shrink: 0; background: #0b0f19; border-right: 1px solid #1e2532; display: flex; flex-direction: column; overflow-y: auto;">
+            <div style="padding: 8px 10px; font-size: 11px; color: #6b7a94; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #1e2532; display: flex; justify-content: space-between; align-items: center;">
+                <span>Files</span>
+                <button onclick="addWebFile()" title="Add new file" style="background: none; border: none; color: #00f5ff; font-size: 16px; cursor: pointer; padding: 0; line-height: 1;">+</button>
+            </div>
+            <div id="file-list"></div>
+        </div>
+
+        <!-- Web Editor Area -->
+        <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+            <!-- Web File Tabs -->
+            <div id="web-file-tabs" style="display: flex; align-items: center; background: #111725; border-bottom: 1px solid #1e2532; min-height: 36px; overflow-x: auto; flex-shrink: 0;"></div>
+            <!-- Web Toolbar -->
+            <div style="background: #0b0f19; padding: 8px 15px; border-bottom: 1px solid #1e2532; display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+                <button class="run-btn" onclick="runCode()" style="padding: 6px 16px;">▶ Run</button>
+                <button id="ai-btn-web" class="run-btn" onclick="askAI()" style="background: linear-gradient(90deg, #ff007f, #7f00ff); padding: 6px 16px;">✨ Ask AI</button>
+                <label style="color: #6b7a94; font-size: 12px; margin-left: auto;">Live Preview</label>
+                <input type="checkbox" id="live-preview-toggle" checked onchange="toggleLivePreview()" style="cursor: pointer;">
+            </div>
+            <!-- The Web CodeMirror Editor -->
+            <div style="flex: 1; overflow: hidden; position: relative;">
+                <textarea id="web-code-editor" spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <!-- Web Resizer -->
+        <div id="web-resizer" style="width: 6px; flex-shrink: 0; background: #111725; border-left: 1px solid #1e2532; cursor: col-resize;"></div>
+
+        <!-- Web Preview Panel -->
+        <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+            <!-- Browser / Console tabs -->
+            <div style="display: flex; align-items: center; background: #111725; border-bottom: 1px solid #1e2532; min-height: 36px; flex-shrink: 0;">
+                <button id="tab-browser" onclick="switchPreviewTab('browser')" style="padding: 8px 16px; background: none; border: none; border-bottom: 2px solid #00f5ff; color: #00f5ff; cursor: pointer; font-size: 13px; font-weight: 600;">🌐 Browser</button>
+                <button id="tab-console" onclick="switchPreviewTab('console')" style="padding: 8px 16px; background: none; border: none; border-bottom: 2px solid transparent; color: #6b7a94; cursor: pointer; font-size: 13px;">⬛ Console</button>
+            </div>
+            <!-- Iframe Preview -->
+            <iframe id="web-preview" style="flex: 1; width: 100%; border: none; background: white;"></iframe>
+            <!-- Console Output -->
+            <div id="web-console" style="display: none; flex: 1; background: #0b0f19; color: #ccc; font-family: Consolas, monospace; font-size: 13px; padding: 10px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <!-- ======= NORMAL COMPILER MODE (Python/C++/Java/C/SQL) ======= -->
+    <div id="compiler-panel" class="main-container">
         <div class="editor-section">
             <div class="toolbar">
-                <button class="run-btn" id="run-btn" onclick="runCode()">▶ Run</button>                <button id="download-btn" onclick="downloadCode()">⬇ Download</button>
+                <button class="run-btn" id="run-btn" onclick="runCode()">▶ Run</button>
+                <button id="download-btn" onclick="downloadCode()">⬇ Download</button>
                 <button id="ai-btn" class="run-btn" onclick="askAI()" style="margin-left: 10px; background: linear-gradient(90deg, #ff007f, #7f00ff);">✨ Ask AI</button>
             </div>
             <textarea id="code-editor" spellcheck="false" placeholder="Write your code here..."></textarea>
@@ -260,8 +307,10 @@
             cpp: 'text/x-c++src',
             c: 'text/x-csrc',
             java: 'text/x-java',
+            sql: 'text/x-sql',
             html: 'xml',
-            css: 'css'
+            css: 'css',
+            js: 'javascript'
         };
 
         const defaultCode = {
@@ -282,14 +331,18 @@
         function switchLanguage(lang) {
             localStorage.setItem('selectedLanguage', lang);
             
-            
+            // Exit web dev mode if coming from it
+            if (isWebDevMode) {
+                exitWebDevMode();
+            }
+
             // Highlight active tab
             document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
             const activeTab = document.querySelector(`.lang-tab[data-lang="${lang}"]`);
             if (activeTab) activeTab.classList.add('active');
             
-            // Set Mode
-            editor.setOption('mode', langModes[lang]);
+            // Set Mode (use fallback to 'python' if undefined)
+            editor.setOption('mode', langModes[lang] || 'python');
 
             // Try to load saved code from local storage
             const savedCode = localStorage.getItem('code_' + lang);
@@ -333,30 +386,8 @@
             // Save current code immediately
             localStorage.setItem('code_' + lang, code);
 
-            if (['html', 'css', 'js'].includes(lang)) {
-                // Run Web Preview
-                const htmlCode = localStorage.getItem('code_html') || '';
-                const cssCode = localStorage.getItem('code_css') || '';
-                const jsCode = localStorage.getItem('code_js') || '';
-                
-                const combined = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>${cssCode}</style>
-                    </head>
-                    <body>
-                        ${htmlCode}
-                        <script>${jsCode}<\/script>
-                    </body>
-                    </html>
-                `;
-                
-                const preview = document.getElementById('web-preview');
-                const doc = preview.contentDocument || preview.contentWindow.document;
-                doc.open();
-                doc.write(combined);
-                doc.close();
+            if (lang === 'webdev' || isWebDevMode) {
+                renderWebPreview();
                 return;
             }
             
@@ -421,6 +452,353 @@
             fitAddon.fit();
         });
         
+
+        // =========================================================
+        // WEB DEV MODE — Multi-file editor (HTML/CSS/JS only)
+        // =========================================================
+        
+        let webFiles = {};
+        let activeWebFile = 'index.html';
+        let webEditor = null;
+        let livePreviewEnabled = true;
+        let previewDebounceTimer = null;
+        let isWebDevMode = false;
+
+        const webFileDefaults = {
+            'index.html': `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Hello, World!</h1>
+    <p>Edit HTML, CSS and JS files and see live preview.</p>
+    <script src="script.js"><\/script>
+</body>
+</html>`,
+            'style.css': `body {
+    font-family: Arial, sans-serif;
+    background: #f0f4f8;
+    color: #333;
+    padding: 30px;
+}
+
+h1 {
+    color: #5a00cc;
+}`,
+            'script.js': `// JavaScript is linked via script.js
+console.log('Hello from script.js!');
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Page loaded!');
+});`
+        };
+
+        const webFileModes = {
+            'html': 'xml',
+            'css': 'css',
+            'js': 'javascript',
+            'ts': 'javascript',
+            'json': 'javascript',
+            'sql': 'text/x-sql',
+            'txt': null
+        };
+
+        function getFileModeFromName(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            return webFileModes[ext] || 'xml';
+        }
+
+        function enterWebDevMode() {
+            isWebDevMode = true;
+            localStorage.setItem('selectedLanguage', 'webdev');
+
+            // Show/hide panels
+            document.getElementById('compiler-panel').style.display = 'none';
+            const webPanel = document.getElementById('webdev-panel');
+            webPanel.style.display = 'flex';
+
+            // Highlight the tab
+            document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            const wt = document.getElementById('webdev-tab');
+            if (wt) wt.classList.add('active');
+
+            // Initialize webEditor if not done yet
+            if (!webEditor) {
+                webEditor = CodeMirror.fromTextArea(document.getElementById('web-code-editor'), {
+                    lineNumbers: true,
+                    theme: document.body.classList.contains('light-mode') ? 'default' : 'monokai',
+                    autoCloseBrackets: true,
+                    mode: 'xml'
+                });
+                webEditor.setSize('100%', '100%');
+                webEditor.on('change', () => {
+                    // Save current file content
+                    webFiles[activeWebFile] = webEditor.getValue();
+                    if (livePreviewEnabled) {
+                        clearTimeout(previewDebounceTimer);
+                        previewDebounceTimer = setTimeout(renderWebPreview, 300);
+                    }
+                });
+            }
+
+            // Load default files if not already loaded
+            if (Object.keys(webFiles).length === 0) {
+                for (const [name, code] of Object.entries(webFileDefaults)) {
+                    const saved = localStorage.getItem('webfile_' + name);
+                    webFiles[name] = saved !== null ? saved : code;
+                }
+            }
+
+            buildFileSidebar();
+            buildFileTabs();
+            openWebFile('index.html');
+            renderWebPreview();
+
+            // Web resizer logic
+            initWebResizer();
+        }
+
+        function exitWebDevMode() {
+            isWebDevMode = false;
+            document.getElementById('webdev-panel').style.display = 'none';
+            document.getElementById('compiler-panel').style.display = 'flex';
+        }
+
+        function buildFileSidebar() {
+            const list = document.getElementById('file-list');
+            list.innerHTML = '';
+            for (const name of Object.keys(webFiles)) {
+                const row = document.createElement('div');
+                row.id = 'sidebar-file-' + name;
+                row.innerText = name;
+                row.title = name;
+                row.style.cssText = `padding: 7px 12px; font-size: 12px; cursor: pointer; color: #a8b2c1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.15s;`;
+                row.onclick = () => openWebFile(name);
+                row.onmouseenter = () => { if (activeWebFile !== name) row.style.background = '#1e2532'; };
+                row.onmouseleave = () => { if (activeWebFile !== name) row.style.background = ''; };
+                if (name === activeWebFile) {
+                    row.style.background = '#1e2532';
+                    row.style.color = '#00f5ff';
+                    row.style.borderLeft = '2px solid #00f5ff';
+                }
+                list.appendChild(row);
+            }
+        }
+
+        function buildFileTabs() {
+            const bar = document.getElementById('web-file-tabs');
+            bar.innerHTML = '';
+            for (const name of Object.keys(webFiles)) {
+                const tab = document.createElement('div');
+                tab.id = 'filetab-' + name;
+                const isActive = name === activeWebFile;
+                tab.style.cssText = `display: flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; color: ${isActive ? '#00f5ff' : '#a8b2c1'}; border-bottom: 2px solid ${isActive ? '#00f5ff' : 'transparent'}; white-space: nowrap; background: ${isActive ? '#0b0f19' : 'transparent'}; flex-shrink: 0;`;
+                tab.onclick = () => openWebFile(name);
+
+                const label = document.createElement('span');
+                label.innerText = name;
+                label.style.pointerEvents = 'none';
+
+                const closeBtn = document.createElement('button');
+                closeBtn.innerText = '✕';
+                closeBtn.title = 'Close ' + name;
+                closeBtn.style.cssText = `background: none; border: none; color: #6b7a94; cursor: pointer; font-size: 11px; padding: 0; line-height: 1; display: flex; align-items: center;`;
+                closeBtn.onclick = (e) => { e.stopPropagation(); closeWebFile(name); };
+
+                tab.appendChild(label);
+                tab.appendChild(closeBtn);
+                bar.appendChild(tab);
+            }
+        }
+
+        function openWebFile(name) {
+            // Save current before switching
+            if (webEditor && activeWebFile) {
+                webFiles[activeWebFile] = webEditor.getValue();
+                saveWebFiles();
+            }
+            activeWebFile = name;
+
+            webEditor.setValue(webFiles[name] || '');
+            webEditor.setOption('mode', getFileModeFromName(name));
+            webEditor.refresh();
+
+            buildFileSidebar();
+            buildFileTabs();
+        }
+
+        function closeWebFile(name) {
+            const keys = Object.keys(webFiles);
+            if (keys.length === 1) {
+                alert('You must have at least one file open!');
+                return;
+            }
+            delete webFiles[name];
+            localStorage.removeItem('webfile_' + name);
+
+            // Switch to first remaining file
+            if (activeWebFile === name) {
+                const remaining = Object.keys(webFiles);
+                activeWebFile = remaining[0];
+                webEditor.setValue(webFiles[activeWebFile] || '');
+                webEditor.setOption('mode', getFileModeFromName(activeWebFile));
+            }
+            buildFileSidebar();
+            buildFileTabs();
+            renderWebPreview();
+        }
+
+        function addWebFile() {
+            const name = prompt('Enter filename (e.g. utils.js, about.html, theme.css):');
+            if (!name || !name.trim()) return;
+            const trimmed = name.trim();
+            if (webFiles[trimmed] !== undefined) {
+                alert('A file with that name already exists!');
+                return;
+            }
+            webFiles[trimmed] = '';
+            buildFileSidebar();
+            buildFileTabs();
+            openWebFile(trimmed);
+        }
+
+        function saveWebFiles() {
+            for (const [name, code] of Object.entries(webFiles)) {
+                localStorage.setItem('webfile_' + name, code);
+            }
+        }
+
+        function renderWebPreview() {
+            if (webEditor && activeWebFile) {
+                webFiles[activeWebFile] = webEditor.getValue();
+                saveWebFiles();
+            }
+
+            const htmlFile = webFiles['index.html'] || Object.values(webFiles)[0] || '';
+            const cssFiles = Object.entries(webFiles).filter(([n]) => n.endsWith('.css'));
+            const jsFiles = Object.entries(webFiles).filter(([n]) => n.endsWith('.js'));
+
+            let cssInline = cssFiles.map(([, code]) => `<style>${code}</style>`).join('\n');
+            let jsInline  = jsFiles.map(([, code]) => `<script>${code}<\/script>`).join('\n');
+
+            // Parse HTML and inject CSS/JS in place of link/script tags
+            let combined = htmlFile;
+            cssFiles.forEach(([name, code]) => {
+                combined = combined.replace(new RegExp(`<link[^>]*href=["']${name}["'][^>]*>`, 'gi'), `<style>${code}</style>`);
+            });
+            jsFiles.forEach(([name, code]) => {
+                combined = combined.replace(new RegExp(`<script[^>]*src=["']${name}["'][^>]*>\s*<\/script>`, 'gi'), `<script>${code}<\/script>`);
+            });
+
+            // Inject console capture
+            const consoleCapture = `<script>
+                (function() {
+                    var origLog = console.log, origErr = console.error, origWarn = console.warn;
+                    function send(type, args) {
+                        window.parent.postMessage({ type: 'console', level: type, msg: Array.from(args).map(String).join(' ') }, '*');
+                    }
+                    console.log = function() { origLog.apply(console,arguments); send('log', arguments); };
+                    console.error = function() { origErr.apply(console,arguments); send('error', arguments); };
+                    console.warn = function() { origWarn.apply(console,arguments); send('warn', arguments); };
+                    window.addEventListener('error', function(e) { send('error', [e.message]); });
+                })();
+            <\/script>`;
+
+            combined = combined.replace('<head>', '<head>' + consoleCapture);
+
+            const iframe = document.getElementById('web-preview');
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(combined);
+            doc.close();
+        }
+
+        // Listen for console messages from the iframe
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'console') {
+                const colors = { log: '#ccc', error: '#ff4444', warn: '#ffbb00' };
+                const icons  = { log: '›', error: '✕', warn: '⚠' };
+                const div = document.getElementById('web-console');
+                const line = document.createElement('div');
+                line.style.cssText = `padding: 3px 0; border-bottom: 1px solid #1e2532; color: ${colors[e.data.level] || '#ccc'};`;
+                line.innerText = `${icons[e.data.level] || '>'} ${e.data.msg}`;
+                div.appendChild(line);
+                div.scrollTop = div.scrollHeight;
+            }
+        });
+
+        function switchPreviewTab(tab) {
+            const iframe = document.getElementById('web-preview');
+            const consoleDiv = document.getElementById('web-console');
+            const tabBrowser = document.getElementById('tab-browser');
+            const tabConsole = document.getElementById('tab-console');
+
+            if (tab === 'browser') {
+                iframe.style.display = 'block';
+                consoleDiv.style.display = 'none';
+                tabBrowser.style.borderBottomColor = '#00f5ff';
+                tabBrowser.style.color = '#00f5ff';
+                tabConsole.style.borderBottomColor = 'transparent';
+                tabConsole.style.color = '#6b7a94';
+            } else {
+                iframe.style.display = 'none';
+                consoleDiv.style.display = 'block';
+                tabBrowser.style.borderBottomColor = 'transparent';
+                tabBrowser.style.color = '#6b7a94';
+                tabConsole.style.borderBottomColor = '#00f5ff';
+                tabConsole.style.color = '#00f5ff';
+            }
+        }
+
+        function toggleLivePreview() {
+            livePreviewEnabled = document.getElementById('live-preview-toggle').checked;
+        }
+
+        // Web Resizer Logic
+        function initWebResizer() {
+            const wr = document.getElementById('web-resizer');
+            if (!wr || wr._initialized) return;
+            wr._initialized = true;
+            let isWResizing = false;
+            wr.addEventListener('mousedown', () => {
+                isWResizing = true;
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+            });
+            document.addEventListener('mousemove', (e) => {
+                if (!isWResizing) return;
+                const panel = document.getElementById('webdev-panel');
+                const rect = panel.getBoundingClientRect();
+                const left = e.clientX - rect.left;
+                const min = 200;
+                if (left > min && left < rect.width - min) {
+                    const leftEditorEl = wr.previousElementSibling;
+                    leftEditorEl.style.flex = 'none';
+                    leftEditorEl.style.width = left + 'px';
+                    if (webEditor) webEditor.refresh();
+                }
+            });
+            document.addEventListener('mouseup', () => {
+                if (isWResizing) {
+                    isWResizing = false;
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                    if (webEditor) webEditor.refresh();
+                }
+            });
+        }
+
+        // On page load: if last session was webdev mode, enter it
+        (function() {
+            const sl = localStorage.getItem('selectedLanguage');
+            if (sl === 'webdev') {
+                enterWebDevMode();
+            }
+        })();
+
         // --- AI Assistant Logic ---
         
         dragElement(document.getElementById("ai-modal"));
