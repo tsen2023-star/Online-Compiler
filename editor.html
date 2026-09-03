@@ -91,17 +91,7 @@
       .cm-s-monokai .CodeMirror-gutters { background-color: #0b0f19 !important; border-right: 1px solid #1e2532 !important; }
     </style>
 </head>
-<body>
-    <script>
-        window.addEventListener('error', function(e) {
-            const errDiv = document.createElement('div');
-            errDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:red; color:white; z-index:99999; padding:20px; font-size:16px; font-family:sans-serif;';
-            errDiv.innerHTML = '<b>JS ERROR:</b> ' + e.message + '<br><b>File:</b> ' + e.filename + '<br><b>Line:</b> ' + e.lineno;
-            document.body.appendChild(errDiv);
-        });
-    </script>
-
-    <div class="header">
+<body><div class="header">
         <div class="logo"><span>&lt;/&gt;</span> Code Compiler</div>
         <div class="header-actions" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
             <button id="home-btn" onclick="window.location.href='index.html'">Home</button>
@@ -496,17 +486,7 @@
     <title>My Page</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <script>
-        window.addEventListener('error', function(e) {
-            const errDiv = document.createElement('div');
-            errDiv.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:red; color:white; z-index:99999; padding:20px; font-size:16px; font-family:sans-serif;';
-            errDiv.innerHTML = '<b>JS ERROR:</b> ' + e.message + '<br><b>File:</b> ' + e.filename + '<br><b>Line:</b> ' + e.lineno;
-            document.body.appendChild(errDiv);
-        });
-    </script>
-
-    <h1>Hello, World!</h1>
+<body><h1>Hello, World!</h1>
     <p>Edit HTML, CSS and JS files and see live preview.</p>
     <script src="script.js"><\/script>
 </body>
