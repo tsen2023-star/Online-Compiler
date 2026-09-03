@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=webdev_engine_v1">
+    <link rel="stylesheet" href="style.css?v=webdev_layout_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -125,7 +125,7 @@
     </div>
 
     <!-- ======= WEB DEV MODE PANEL (HTML/CSS/JS only) ======= -->
-    <div id="webdev-panel" style="display:none; flex: 1; overflow: hidden; display: none; flex-direction: row;">
+    <div id="webdev-panel" style="display:none; flex: 1; overflow: hidden; flex-direction: row; height: calc(100vh - 92px);">
         <!-- File Sidebar -->
         <div id="file-sidebar" style="width: 130px; flex-shrink: 0; background: #0b0f19; border-right: 1px solid #1e2532; display: flex; flex-direction: column; overflow-y: auto;">
             <div style="padding: 8px 10px; font-size: 11px; color: #6b7a94; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #1e2532; display: flex; justify-content: space-between; align-items: center;">
@@ -147,7 +147,7 @@
                 <input type="checkbox" id="live-preview-toggle" checked onchange="toggleLivePreview()" style="cursor: pointer;">
             </div>
             <!-- The Web CodeMirror Editor -->
-            <div style="flex: 1; overflow: hidden; position: relative;">
+            <div style="flex: 1; overflow: hidden; position: relative; height: 0;">
                 <textarea id="web-code-editor" spellcheck="false"></textarea>
             </div>
         </div>
@@ -163,14 +163,14 @@
                 <button id="tab-console" onclick="switchPreviewTab('console')" style="padding: 8px 16px; background: none; border: none; border-bottom: 2px solid transparent; color: #6b7a94; cursor: pointer; font-size: 13px;">⬛ Console</button>
             </div>
             <!-- Iframe Preview -->
-            <iframe id="web-preview" style="flex: 1; width: 100%; border: none; background: white;"></iframe>
+            <iframe id="web-preview" style="flex: 1; width: 100%; height: 100%; border: none; background: white; display: block;"></iframe>
             <!-- Console Output -->
             <div id="web-console" style="display: none; flex: 1; background: #0b0f19; color: #ccc; font-family: Consolas, monospace; font-size: 13px; padding: 10px; overflow-y: auto;"></div>
         </div>
     </div>
 
     <!-- ======= NORMAL COMPILER MODE (Python/C++/Java/C/SQL) ======= -->
-    <div id="compiler-panel" class="main-container">
+    <div id="compiler-panel" class="main-container" style="display:flex;">
         <div class="editor-section">
             <div class="toolbar">
                 <button class="run-btn" id="run-btn" onclick="runCode()">▶ Run</button>
@@ -244,8 +244,8 @@
             const pointerRelativeXpos = e.clientX - containerOffsetLeft;
             const containerWidth = leftSide.parentElement.clientWidth;
             
-            const cssTab = document.querySelector('.lang-tab[data-lang="css"]');
-            const minWidth = cssTab ? cssTab.offsetLeft : 50; // Stop exactly at CSS tab boundary
+            const webTab = document.querySelector('.lang-tab[data-lang="webdev"]');
+            const minWidth = webTab ? webTab.offsetLeft : 50; // Stop at Web tab boundary
             if (pointerRelativeXpos > minWidth && pointerRelativeXpos < containerWidth - minWidth) {
                 leftSide.style.flex = 'none';
                 leftSide.style.width = pointerRelativeXpos + 'px';
@@ -519,6 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('compiler-panel').style.display = 'none';
             const webPanel = document.getElementById('webdev-panel');
             webPanel.style.display = 'flex';
+            webPanel.style.flexDirection = 'row';
 
             // Highlight the tab
             document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));

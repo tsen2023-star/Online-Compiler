@@ -933,3 +933,15 @@ body.light-mode #ai-input-container {
     justify-content: space-between !important;
 }
 
+
+
+/* ===== Web Dev Panel ===== */
+#webdev-panel {
+    height: calc(100vh - 92px);
+    overflow: hidden;
+}
+
+#webdev-panel .CodeMirror {
+    height: 100% !important;
+    border-radius: 0;
+}
