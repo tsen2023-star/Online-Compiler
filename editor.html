@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=init_order_fix">
+    <link rel="stylesheet" href="style.css?v=legacy_state_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -328,6 +328,11 @@
         };
 
         function switchLanguage(lang) {
+            // Map legacy saved languages to the new webdev tab
+            if (['html', 'css', 'js'].includes(lang)) {
+                lang = 'webdev';
+            }
+            
             // Handle webdev mode specially
             if (lang === 'webdev') {
                 if (typeof enterWebDevMode === 'function') {
@@ -808,7 +813,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // On page load: if last session was webdev mode, enter it
         // (This IIFE runs AFTER enterWebDevMode is defined - safe to call)
         (function() {
-            const sl = localStorage.getItem('selectedLanguage');
+            let sl = localStorage.getItem('selectedLanguage');
+            // Map legacy saved states
+            if (['html', 'css', 'js'].includes(sl)) sl = 'webdev';
+            
             if (sl === 'webdev') {
                 enterWebDevMode();
             } else {
