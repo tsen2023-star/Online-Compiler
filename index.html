@@ -1,97 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Compiler - Home</title>
-    <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Compiler - Home</title>
+<link rel="icon" type="image/jpeg" href="favicon.jpg">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="landing-container">
-        <div class="landing-header">
-            <div class="logo"><span>&lt;/&gt;</span> CodeCompiler</div>
-            <p class="tagline">Don’t just copy code - understand it, experiment with it, and make it your own.
+<div class="landing-container">
+<div class="landing-header">
+<div class="logo"><span>&lt;/&gt;</span> CodeCompiler</div>
+<p class="tagline">Don’t just copy code - understand it, experiment with it, and make it your own.
 Learn by doing, build with purpose, and define yourself through your ideas.
 </p>
-        </div>
-
-        <div class="language-grid">
-            <div class="language-card" onclick="selectLanguage('python')">
-                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                <h3>Python</h3>
-                <p>Simple and readable</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('cpp')">
-                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                <h3>C++</h3>
-                <p>Speed and performance</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('java')">
-                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                <h3>Java</h3>
-                <p>Enterprise OOP</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('c')">
-                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                <h3>C</h3>
-                <p>Low-level power</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('webdev')">
-                <div class="lang-icon" style="display: flex; justify-content: center;">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" style="width: 45px; height: 45px; z-index: 3; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" style="width: 45px; height: 45px; z-index: 2; margin-left: -15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" style="width: 45px; height: 45px; z-index: 1; margin-left: -15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
-                </div>
-                <h3>Web Dev</h3>
-                <p>HTML, CSS, & JS</p>
-            </div>
-            <div class="language-card" onclick="selectLanguage('sql')">
-                <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                <h3>SQL</h3>
-                <p>Database queries</p>
-            </div>
-        </div>
-
-
-            <div class="language-grid">
-                <div class="language-card" onclick="selectLanguage('go')">
-                    <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                    <h3>Go</h3>
-                    <p>Concurrent & fast</p>
-                </div>
-                <div class="language-card" onclick="selectLanguage('rust')">
-                    <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); filter: invert(1);"></div>
-                    <h3>Rust</h3>
-                    <p>Safe & blazing fast</p>
-                </div>
-                <div class="language-card" onclick="selectLanguage('ruby')">
-                    <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ruby/ruby-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                    <h3>Ruby</h3>
-                    <p>Elegant & productive</p>
-                </div>
-                <div class="language-card" onclick="selectLanguage('php')">
-                    <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                    <h3>PHP</h3>
-                    <p>Web scripting</p>
-                </div>
-                <div class="language-card" onclick="selectLanguage('bash')">
-                    <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                    <h3>Bash</h3>
-                    <p>Shell automation</p>
-                </div>
-                <div class="language-card" onclick="selectLanguage('csharp')">
-                    <div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
-                    <h3>C#</h3>
-                    <p>Modern & powerful</p>
-                </div>
-            </div>
-        </div>
-    <script>
-        function selectLanguage(lang) {
-            localStorage.setItem('selectedLanguage', lang);
-            window.location.href = 'editor.html';
-        }
-    </script>
+</div>
+<div class="language-grid">
+<div class="language-card" onclick="selectLanguage('python')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>Python</h3>
+<p>Simple and readable</p>
+</div>
+<div class="language-card" onclick="selectLanguage('cpp')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>C++</h3>
+<p>Speed and performance</p>
+</div>
+<div class="language-card" onclick="selectLanguage('java')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>Java</h3>
+<p>Enterprise OOP</p>
+</div>
+<div class="language-card" onclick="selectLanguage('c')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>C</h3>
+<p>Low-level power</p>
+</div>
+<div class="language-card" onclick="selectLanguage('webdev')">
+<div class="lang-icon" style="display: flex; justify-content: center;">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" style="width: 45px; height: 45px; z-index: 3; margin-left: -15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" style="width: 45px; height: 45px; z-index: 2; margin-left: -15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" style="width: 45px; height: 45px; z-index: 1; margin-left: -15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+</div>
+<h3>Web Dev</h3>
+<p>HTML, CSS, & JS</p>
+</div>
+<div class="language-card" onclick="selectLanguage('sql')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>SQL</h3>
+<p>Database queries</p>
+</div>
+</div>
+<div class="language-grid">
+<div class="language-card" onclick="selectLanguage('go')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>Go</h3>
+<p>Concurrent & fast</p>
+</div>
+<div class="language-card" onclick="selectLanguage('rust')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); filter: invert(1);"></div>
+<h3>Rust</h3>
+<p>Safe & blazing fast</p>
+</div>
+<div class="language-card" onclick="selectLanguage('ruby')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ruby/ruby-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>Ruby</h3>
+<p>Elegant & productive</p>
+</div>
+<div class="language-card" onclick="selectLanguage('php')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>PHP</h3>
+<p>Web scripting</p>
+</div>
+<div class="language-card" onclick="selectLanguage('bash')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>Bash</h3>
+<p>Shell automation</p>
+</div>
+<div class="language-card" onclick="selectLanguage('csharp')">
+<div class="lang-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" style="width: 55px; height: 55px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));"></div>
+<h3>C#</h3>
+<p>Modern & powerful</p>
+</div>
+</div>
+</div>
+<script>
+function selectLanguage(lang) {
+  localStorage.setItem('selectedLanguage', lang);
+  document.body.classList.add('fade-out');
+  setTimeout(() => {
+    window.location.href = 'editor.html';
+  }, 300); // matches fadeOutPage animation duration
+}
+</script>
 </body>
 </html>
