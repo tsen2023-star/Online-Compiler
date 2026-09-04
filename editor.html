@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,7 +99,7 @@
 <body><div class="header">
         <div class="logo"><span>&lt;/&gt;</span> Code Compiler</div>
         <div class="header-actions" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
-            <button id="home-btn" onclick="window.location.href='index.html'">Home</button>
+            <button id="home-btn" onclick="goHome()">Home</button>
             
         </div>
     </div>
@@ -276,6 +275,14 @@
                 }
             }
         });
+
+        // --- Home Navigation with fade transition ---
+        function goHome() {
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 300); // matches fadeOutPage animation duration in style.css
+        }
 
         // --- Theme Logic ---
         function toggleTheme() {
