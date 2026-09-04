@@ -7,6 +7,13 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     default-jdk-headless \
+    sqlite3 \
+    golang-go \
+    rustc \
+    ruby \
+    php-cli \
+    mono-mcs \
+    mono-runtime \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
