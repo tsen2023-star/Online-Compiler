@@ -73,6 +73,46 @@ async def run_code_ws(websocket: WebSocket):
                 with open(java_file, "w") as f: f.write(code)
                 compile_cmd = ["javac", java_file]
                 run_cmd = ["java", "-cp", tmpdirname, class_name]
+                
+            elif lang == "sql":
+                sql_file = os.path.join(tmpdirname, f"{unique_id}.sql")
+                with open(sql_file, "w") as f: f.write(code)
+                run_cmd = ["bash", "-c", f"sqlite3 :memory: < {sql_file}"]
+                
+            elif lang == "go":
+                go_file = os.path.join(tmpdirname, "main.go")
+                with open(go_file, "w") as f: f.write(code)
+                run_cmd = ["go", "run", go_file]
+                
+            elif lang == "rust":
+                rs_file = os.path.join(tmpdirname, f"{unique_id}.rs")
+                out_file = os.path.join(tmpdirname, f"{unique_id}.out")
+                with open(rs_file, "w") as f: f.write(code)
+                compile_cmd = ["rustc", rs_file, "-o", out_file]
+                run_cmd = [out_file]
+                
+            elif lang == "ruby":
+                rb_file = os.path.join(tmpdirname, f"{unique_id}.rb")
+                with open(rb_file, "w") as f: f.write(code)
+                run_cmd = ["ruby", rb_file]
+                
+            elif lang == "php":
+                php_file = os.path.join(tmpdirname, f"{unique_id}.php")
+                with open(php_file, "w") as f: f.write(code)
+                run_cmd = ["php", php_file]
+                
+            elif lang in ["bash", "shell"]:
+                sh_file = os.path.join(tmpdirname, f"{unique_id}.sh")
+                with open(sh_file, "w") as f: f.write(code)
+                run_cmd = ["bash", sh_file]
+                
+            elif lang in ["c#", "csharp"]:
+                cs_file = os.path.join(tmpdirname, f"{unique_id}.cs")
+                out_file = os.path.join(tmpdirname, f"{unique_id}.exe")
+                with open(cs_file, "w") as f: f.write(code)
+                compile_cmd = ["mcs", cs_file, f"-out:{out_file}"]
+                run_cmd = ["mono", out_file]
+                
             else:
                 await websocket.send_text("Language not supported for interactive execution.\r\n")
                 await websocket.close()
