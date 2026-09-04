@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Online Compiler - Home</title>
 <link rel="icon" type="image/jpeg" href="favicon.jpg">
-<link rel="stylesheet" href="style.css?v=animations_v1">
+<link rel="stylesheet" href="style.css?v=animations_fast">
 </head>
 <body>
 <div class="landing-container">
@@ -89,8 +89,8 @@ function selectLanguage(lang) {
   localStorage.setItem('selectedLanguage', lang);
   document.body.classList.add('fade-out');
   setTimeout(() => {
-    window.location.href = 'editor.html';
-  }, 300); // matches fadeOutPage animation duration
+      window.location.href = "editor.html";
+    }, 100); // matches fadeOutPage animation duration
 }
 </script>
 </body>

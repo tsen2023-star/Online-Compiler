@@ -955,7 +955,7 @@ body.light-mode #ai-input-container {
 /* Fade + slide in on every page load */
 body {
     opacity: 0;
-    animation: fadeInPage 0.5s ease forwards;
+    animation: fadeInPage 0.2s ease forwards;
 }
 @keyframes fadeInPage {
     from { opacity: 0; transform: translateY(10px); }
@@ -965,7 +965,7 @@ body {
 /* Fade + slide out just before navigating to another page
    (triggered by adding the "fade-out" class via JS, e.g. selectLanguage() / goHome()) */
 body.fade-out {
-    animation: fadeOutPage 0.3s ease forwards;
+    animation: fadeOutPage 0.1s ease forwards;
 }
 @keyframes fadeOutPage {
     from { opacity: 1; transform: translateY(0); }
