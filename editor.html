@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=tdz_fix">
+    <link rel="stylesheet" href="style.css?v=run_and_ui_fix">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -105,7 +105,7 @@
         <button class="lang-tab" data-lang="java" onclick="switchLanguage('java')">Java</button>
         <button class="lang-tab" data-lang="c" onclick="switchLanguage('c')">C</button>
         <button class="lang-tab" data-lang="sql" onclick="switchLanguage('sql')">SQL</button>
-        <div style="width: 1px; height: 20px; background: var(--border); margin: 0 10px;"></div>
+        
         <button class="lang-tab" data-lang="webdev" id="webdev-tab" onclick="enterWebDevMode()">Web</button>
     
         <div style="margin-left: auto; display: flex; align-items: center; padding-right: 15px;">
@@ -399,7 +399,13 @@
         let currentWs = null;
 
         function runCode() {
-            if (currentWs) return; // already running
+            if (currentWs) {
+                // If a program is already running or the connection is stuck, cleanly terminate it
+                currentWs.onclose = null; // Prevent old onclose handler from wiping new state
+                currentWs.close();
+                term.write('\r\n\x1b[33mTerminated previous execution.\x1b[0m\r\n');
+                currentWs = null;
+            }
 
             const lang = localStorage.getItem('selectedLanguage') || 'python';
             const code = editor.getValue();
