@@ -303,6 +303,8 @@ body {
 
 .language-tabs {
     display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
 
     background: var(--bg2);
 

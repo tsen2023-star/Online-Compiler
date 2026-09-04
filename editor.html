@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=run_and_ui_fix">
+    <link rel="stylesheet" href="style.css?v=six_new_langs">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -82,6 +82,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/go/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/rust/rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/ruby/ruby.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/php/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/shell/shell.min.js"></script>
     <!-- Marked.js for streaming markdown parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
@@ -105,7 +111,12 @@
         <button class="lang-tab" data-lang="java" onclick="switchLanguage('java')">Java</button>
         <button class="lang-tab" data-lang="c" onclick="switchLanguage('c')">C</button>
         <button class="lang-tab" data-lang="sql" onclick="switchLanguage('sql')">SQL</button>
-        
+        <button class="lang-tab" data-lang="go" onclick="switchLanguage('go')">Go</button>
+        <button class="lang-tab" data-lang="rust" onclick="switchLanguage('rust')">Rust</button>
+        <button class="lang-tab" data-lang="ruby" onclick="switchLanguage('ruby')">Ruby</button>
+        <button class="lang-tab" data-lang="php" onclick="switchLanguage('php')">PHP</button>
+        <button class="lang-tab" data-lang="bash" onclick="switchLanguage('bash')">Bash</button>
+        <button class="lang-tab" data-lang="csharp" onclick="switchLanguage('csharp')">C#</button>
         <button class="lang-tab" data-lang="webdev" id="webdev-tab" onclick="enterWebDevMode()">Web</button>
     
         <div style="margin-left: auto; display: flex; align-items: center; padding-right: 15px;">
@@ -883,7 +894,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const iconImg = document.getElementById('ai-attachment-icon');
             
             const language = localStorage.getItem('selectedLanguage') || 'python';
-            const ext = {python:'py', cpp:'cpp', java:'java', c:'c', html:'html', css:'css'}[language] || 'txt';
+            const ext = {python:'py', cpp:'cpp', java:'java', c:'c', sql:'sql', html:'html', css:'css', go:'go', rust:'rs', ruby:'rb', php:'php', bash:'sh', csharp:'cs'}[language] || 'txt';
             
             const iconMap = {
                 python: 'python/python-original.svg',
@@ -893,7 +904,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 sql: 'mysql/mysql-original.svg',
                 html: 'html5/html5-original.svg',
                 css: 'css3/css3-original.svg',
-                js: 'javascript/javascript-original.svg'
+                js: 'javascript/javascript-original.svg',
+                go: 'go/go-original.svg',
+                rust: 'rust/rust-original.svg',
+                ruby: 'ruby/ruby-original.svg',
+                php: 'php/php-original.svg',
+                bash: 'bash/bash-original.svg',
+                csharp: 'csharp/csharp-original.svg'
             };
             const iconPath = iconMap[language] || 'javascript/javascript-original.svg';
             if (iconImg) iconImg.src = `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${iconPath}`;
