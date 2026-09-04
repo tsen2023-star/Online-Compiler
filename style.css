@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -946,4 +945,62 @@ body.light-mode #ai-input-container {
 #webdev-panel .CodeMirror {
     height: 100% !important;
     border-radius: 0;
+}
+
+/* ============================================================
+   TRANSITION EFFECTS (added)
+   Shared by index.html and editor.html since both link style.css
+   ============================================================ */
+
+/* Fade + slide in on every page load */
+body {
+    opacity: 0;
+    animation: fadeInPage 0.5s ease forwards;
+}
+@keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade + slide out just before navigating to another page
+   (triggered by adding the "fade-out" class via JS, e.g. selectLanguage() / goHome()) */
+body.fade-out {
+    animation: fadeOutPage 0.3s ease forwards;
+}
+@keyframes fadeOutPage {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Staggered entrance for the language cards on the home page */
+.language-card {
+    opacity: 0;
+    animation: cardIn 0.4s ease forwards;
+}
+.language-grid:nth-of-type(1) .language-card:nth-child(1) { animation-delay: 0.05s; }
+.language-grid:nth-of-type(1) .language-card:nth-child(2) { animation-delay: 0.10s; }
+.language-grid:nth-of-type(1) .language-card:nth-child(3) { animation-delay: 0.15s; }
+.language-grid:nth-of-type(1) .language-card:nth-child(4) { animation-delay: 0.20s; }
+.language-grid:nth-of-type(1) .language-card:nth-child(5) { animation-delay: 0.25s; }
+.language-grid:nth-of-type(1) .language-card:nth-child(6) { animation-delay: 0.30s; }
+.language-grid:nth-of-type(2) .language-card:nth-child(1) { animation-delay: 0.35s; }
+.language-grid:nth-of-type(2) .language-card:nth-child(2) { animation-delay: 0.40s; }
+.language-grid:nth-of-type(2) .language-card:nth-child(3) { animation-delay: 0.45s; }
+.language-grid:nth-of-type(2) .language-card:nth-child(4) { animation-delay: 0.50s; }
+.language-grid:nth-of-type(2) .language-card:nth-child(5) { animation-delay: 0.55s; }
+.language-grid:nth-of-type(2) .language-card:nth-child(6) { animation-delay: 0.60s; }
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Smooth crossfade whenever a panel is switched into view
+   (compiler-panel <-> webdev-panel toggle display:none -> flex) */
+.main-container,
+#webdev-panel {
+    animation: panelFadeIn 0.35s ease;
+}
+@keyframes panelFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
