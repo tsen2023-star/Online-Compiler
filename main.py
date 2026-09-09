@@ -113,6 +113,55 @@ async def run_code_ws(websocket: WebSocket):
                 compile_cmd = ["mcs", cs_file, f"-out:{out_file}"]
                 run_cmd = ["mono", out_file]
                 
+            elif lang == "kotlin":
+                kt_file = os.path.join(tmpdirname, f"{unique_id}.kt")
+                out_file = os.path.join(tmpdirname, f"{unique_id}.jar")
+                with open(kt_file, "w") as f: f.write(code)
+                compile_cmd = ["kotlinc", kt_file, "-include-runtime", "-d", out_file]
+                run_cmd = ["java", "-jar", out_file]
+                
+            elif lang == "dart":
+                dart_file = os.path.join(tmpdirname, f"{unique_id}.dart")
+                with open(dart_file, "w") as f: f.write(code)
+                run_cmd = ["dart", "run", dart_file]
+                
+            elif lang == "r":
+                r_file = os.path.join(tmpdirname, f"{unique_id}.R")
+                with open(r_file, "w") as f: f.write(code)
+                run_cmd = ["Rscript", r_file]
+                
+            elif lang in ["typescript", "ts"]:
+                ts_file = os.path.join(tmpdirname, f"{unique_id}.ts")
+                with open(ts_file, "w") as f: f.write(code)
+                run_cmd = ["ts-node", ts_file]
+                
+            elif lang == "scala":
+                scala_file = os.path.join(tmpdirname, f"{unique_id}.scala")
+                with open(scala_file, "w") as f: f.write(code)
+                run_cmd = ["scala", scala_file]
+                
+            elif lang == "lua":
+                lua_file = os.path.join(tmpdirname, f"{unique_id}.lua")
+                with open(lua_file, "w") as f: f.write(code)
+                run_cmd = ["lua5.3", lua_file]
+                
+            elif lang == "julia":
+                jl_file = os.path.join(tmpdirname, f"{unique_id}.jl")
+                with open(jl_file, "w") as f: f.write(code)
+                run_cmd = ["julia", jl_file]
+                
+            elif lang == "perl":
+                pl_file = os.path.join(tmpdirname, f"{unique_id}.pl")
+                with open(pl_file, "w") as f: f.write(code)
+                run_cmd = ["perl", pl_file]
+                
+            elif lang == "haskell":
+                hs_file = os.path.join(tmpdirname, f"{unique_id}.hs")
+                out_file = os.path.join(tmpdirname, f"{unique_id}")
+                with open(hs_file, "w") as f: f.write(code)
+                compile_cmd = ["ghc", hs_file, "-o", out_file]
+                run_cmd = [out_file]
+                
             else:
                 await websocket.send_text("Language not supported for interactive execution.\r\n")
                 await websocket.close()
