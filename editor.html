@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=animations_v6">
+    <link rel="stylesheet" href="style.css?v=animations_v7">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -104,9 +104,19 @@
 </head>
 <body><div class="header">
         <div class="logo"><span>&lt;/&gt;</span> Code Compiler</div>
-        <div class="header-actions" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+                <div class="header-actions" style="display: flex; flex-direction: row; gap: 15px; align-items: center;">
+            <label class="theme-switch" for="theme-checkbox">
+                <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()">
+                <div class="theme-slider">
+                    <span class="theme-text theme-text-left">DARK<br>MODE</span>
+                    <span class="theme-text theme-text-right">LIGHT<br>MODE</span>
+                    <div class="theme-thumb">
+                        <span class="theme-icon theme-icon-moon">🌙</span>
+                        <span class="theme-icon theme-icon-sun">☀️</span>
+                    </div>
+                </div>
+            </label>
             <button id="home-btn" onclick="goHome()">Home</button>
-            
         </div>
     </div>
 
@@ -518,7 +528,7 @@
 <head>
     <meta charset="UTF-8">
     <title>My Page</title>
-    <link rel="stylesheet" href="style.css?v=animations_v6">
+    <link rel="stylesheet" href="style.css?v=animations_v7">
 </head>
 <body><h1>Hello, World!</h1>
     <p>Edit HTML, CSS and JS files and see live preview.</p>
