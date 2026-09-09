@@ -7,8 +7,14 @@ RUN mkdir -p /usr/share/keyrings
 # Install standard packages (Removed kotlin, added cargo just in case)
 RUN apt-get update && apt-get install -y \
     gcc g++ default-jdk-headless sqlite3 golang-go rustc cargo ruby php-cli mono-mcs mono-runtime \
-    r-base scala lua5.3 julia perl ghc nodejs npm wget unzip apt-transport-https gnupg2 curl \
+    r-base scala lua5.3 perl ghc nodejs npm wget unzip apt-transport-https gnupg2 curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Julia manually (Removed from Debian Trixie apt repos)
+RUN wget -q https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-1.10.0-linux-x86_64.tar.gz && \
+    tar -xzf julia-1.10.0-linux-x86_64.tar.gz -C /opt/ && \
+    rm julia-1.10.0-linux-x86_64.tar.gz && \
+    ln -s /opt/julia-1.10.0/bin/julia /usr/local/bin/julia
 
 # Install Kotlin manually (Not in Debian repositories)
 RUN wget -q https://github.com/JetBrains/kotlin/releases/download/v1.9.22/kotlin-compiler-1.9.22.zip && \
