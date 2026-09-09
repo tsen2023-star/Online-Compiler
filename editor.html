@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=animations_v5">
+    <link rel="stylesheet" href="style.css?v=animations_v6">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -122,21 +122,18 @@
         <button class="lang-tab" data-lang="php" onclick="switchLanguage('php')">PHP</button>
         <button class="lang-tab" data-lang="bash" onclick="switchLanguage('bash')">Bash</button>
         <button class="lang-tab" data-lang="csharp" onclick="switchLanguage('csharp')">C#</button>
+        <button class="lang-tab" data-lang="kotlin" onclick="switchLanguage('kotlin')">Kotlin</button>
+        <button class="lang-tab" data-lang="dart" onclick="switchLanguage('dart')">Dart</button>
+        <button class="lang-tab" data-lang="r" onclick="switchLanguage('r')">R</button>
+        <button class="lang-tab" data-lang="typescript" onclick="switchLanguage('typescript')">TypeScript</button>
+        <button class="lang-tab" data-lang="scala" onclick="switchLanguage('scala')">Scala</button>
+        <button class="lang-tab" data-lang="lua" onclick="switchLanguage('lua')">Lua</button>
+        <button class="lang-tab" data-lang="julia" onclick="switchLanguage('julia')">Julia</button>
+        <button class="lang-tab" data-lang="perl" onclick="switchLanguage('perl')">Perl</button>
+        <button class="lang-tab" data-lang="haskell" onclick="switchLanguage('haskell')">Haskell</button>
         <button class="lang-tab" data-lang="webdev" id="webdev-tab" onclick="enterWebDevMode()">Web</button>
     
-        <div style="margin-left: auto; display: flex; align-items: center; padding-right: 15px;">
-            <label class="theme-switch" for="theme-checkbox">
-                <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()">
-                <div class="theme-slider">
-                    <span class="theme-text theme-text-left">DARK<br>MODE</span>
-                    <span class="theme-text theme-text-right">LIGHT<br>MODE</span>
-                    <div class="theme-thumb">
-                        <span class="theme-icon theme-icon-moon">🌙</span>
-                        <span class="theme-icon theme-icon-sun">☀️</span>
-                    </div>
-                </div>
-            </label>
-        </div>
+        
     </div>
 
     <!-- ======= WEB DEV MODE PANEL (HTML/CSS/JS only) ======= -->
@@ -521,7 +518,7 @@
 <head>
     <meta charset="UTF-8">
     <title>My Page</title>
-    <link rel="stylesheet" href="style.css?v=animations_v5">
+    <link rel="stylesheet" href="style.css?v=animations_v6">
 </head>
 <body><h1>Hello, World!</h1>
     <p>Edit HTML, CSS and JS files and see live preview.</p>
