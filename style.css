@@ -28,7 +28,11 @@
 
 
 
-html {\n    background-color: var(--bg);\n}\n\nbody {
+html {
+    background-color: var(--bg);
+}
+
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: var(--bg);
     color: var(--text);
@@ -953,7 +957,11 @@ body.light-mode #ai-input-container {
    ============================================================ */
 
 /* Fade + slide in on every page load */
-html {\n    background-color: var(--bg);\n}\n\nbody {
+html {
+    background-color: var(--bg);
+}
+
+body {
     opacity: 0;
     animation: fadeInPage 0.2s ease forwards;
 }
