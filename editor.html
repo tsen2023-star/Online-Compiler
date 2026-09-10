@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Editor - CodeCompiler</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-    <link rel="stylesheet" href="style.css?v=animations_v9">
+    <link rel="stylesheet" href="style.css?v=animations_v10">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -528,7 +528,7 @@
 <head>
     <meta charset="UTF-8">
     <title>My Page</title>
-    <link rel="stylesheet" href="style.css?v=animations_v9">
+    <link rel="stylesheet" href="style.css?v=animations_v10">
 </head>
 <body><h1>Hello, World!</h1>
     <p>Edit HTML, CSS and JS files and see live preview.</p>
@@ -1017,20 +1017,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 let accumulatedText = "";
                 responseDiv.innerHTML = ""; // clear thinking
 
+                let lastRenderTime = 0;
                 while (true) {
                     const { done, value } = await reader.read();
-                    if (done) break;
+                    
+                    if (done) {
+                        // Final flush
+                        if (typeof marked !== 'undefined') {
+                            responseDiv.innerHTML = marked.parse(accumulatedText);
+                        } else {
+                            responseDiv.innerText = accumulatedText;
+                        }
+                        responseDiv.scrollTop = responseDiv.scrollHeight;
+                        break;
+                    }
                     
                     const chunk = decoder.decode(value, { stream: true });
                     accumulatedText += chunk;
                     
-                    // Render dynamically using marked.js
-                    if (typeof marked !== 'undefined') {
-                        responseDiv.innerHTML = marked.parse(accumulatedText);
-                    } else {
-                        responseDiv.innerText = accumulatedText;
+                    const now = Date.now();
+                    if (now - lastRenderTime > 50) { // Render throttle (50ms)
+                        if (typeof marked !== 'undefined') {
+                            responseDiv.innerHTML = marked.parse(accumulatedText);
+                        } else {
+                            responseDiv.innerText = accumulatedText;
+                        }
+                        responseDiv.scrollTop = responseDiv.scrollHeight;
+                        lastRenderTime = now;
                     }
-                    responseDiv.scrollTop = responseDiv.scrollHeight; // Auto-scroll to bottom
                 }
             } catch (err) {
                 responseDiv.innerHTML = '<span style="color: #ff3864;">Failed to connect to the backend API. Please make sure the server is online!</span>';

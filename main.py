@@ -260,11 +260,11 @@ async def ask_ai(request: CodeRequest):
             async def err_gen(): yield "Please provide either some code in the editor or ask a specific question!"
             return StreamingResponse(err_gen(), media_type="text/plain")
         
-        response = model.generate_content(prompt, stream=True)
+        response = await model.generate_content_async(prompt, stream=True)
         
         async def stream_generator():
             try:
-                for chunk in response:
+                async for chunk in response:
                     if chunk.text:
                         yield chunk.text
             except Exception as e:
