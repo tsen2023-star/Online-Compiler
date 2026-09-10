@@ -175,7 +175,7 @@ body {
 
 
 .language-card:hover {
-    transform: translateY(-8px) !important;
+    transform: translateY(-8px);
 
     background: var(--card-hover);
 
@@ -987,8 +987,9 @@ body.fade-out {
 
 /* Staggered entrance for the language cards on the home page */
 .language-card {
-    opacity: 0;
-    animation: cardIn 0.4s ease forwards;
+    opacity: 1;
+    transform: translateY(0);
+    animation: cardIn 0.4s ease backwards;
 }
 .language-grid:nth-of-type(1) .language-card:nth-child(1) { animation-delay: 0.05s; }
 .language-grid:nth-of-type(1) .language-card:nth-child(2) { animation-delay: 0.10s; }
