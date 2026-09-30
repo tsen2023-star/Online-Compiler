@@ -235,11 +235,6 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
-
-
-
-# --- AI AGENT CONFIGURATION ---
-# The API key is securely loaded from your local environment to prevent leaking it on GitHub!
 genai.configure(api_key=os.environ.get('GEMINI_API_KEY'))
 
 @app.post("/ask-ai")
