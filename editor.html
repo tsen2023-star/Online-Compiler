@@ -962,14 +962,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof marked !== 'undefined') {
             const renderer = new marked.Renderer();
             renderer.code = function({text, lang}) {
-                const encodedCode = encodeURIComponent(text);
+                const encodedCode = encodeURIComponent(text).replace(/'/g, "%27");
                 const safeCode = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 return `<div style="background: #1e2532; border-radius: 8px; margin: 15px 0; border: 1px solid #3d4b63; overflow: hidden;">
                            <div style="background: #111725; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #3d4b63;">
                            <span style="color: #a8b2c1; font-size: 13px; font-weight: bold;">&lt;/&gt; ${lang || 'Code'}</span>
                            <div>
                            <button class="ai-copy-btn" onclick="navigator.clipboard.writeText(decodeURIComponent('${encodedCode}'))">📋 Copy</button>
-                           <button class="ai-insert-btn" onclick="editor.replaceSelection(decodeURIComponent('${encodedCode}')); document.getElementById('ai-modal').style.display='none';">▶ Insert</button>
+                           <button class="ai-insert-btn" onclick="(typeof isWebDevMode !== \'undefined\' && isWebDevMode ? webEditor : editor).replaceSelection(decodeURIComponent('${encodedCode}')); document.getElementById('ai-modal').style.display='none';">▶ Insert</button>
                            </div></div>
                            <pre style="margin: 0; padding: 15px; color: #00f5ff; font-family: 'Consolas', monospace; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;"><code>${safeCode}</code></pre>
                         </div>`;
